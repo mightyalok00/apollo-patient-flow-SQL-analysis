@@ -35,6 +35,7 @@ import {
 import { SAMPLE_ADMISSIONS } from '../data/sampleDataset';
 import { PatientFlowTrendsSection } from './PatientFlowTrendsSection';
 import { DashboardFilterBar, DashboardFilterState, INITIAL_FILTER_STATE } from './DashboardFilterBar';
+import { ApolloLogo } from './ApolloLogo';
 
 interface DashboardOverviewProps {
   onSelectQuery: (questionNumber: number) => void;
@@ -254,21 +255,24 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
   return (
     <div className="space-y-8 pb-12">
       {/* Hero / Executive Header */}
-      <div className="bg-gradient-to-r from-sky-900 via-slate-900 to-indigo-950 text-white rounded-2xl p-6 sm:p-8 shadow-md relative overflow-hidden">
-        <div className="absolute right-0 top-0 bottom-0 opacity-10 pointer-events-none flex items-center pr-8">
-          <Building2 className="w-80 h-80 text-white" />
+      <div className="bg-gradient-to-r from-sky-950 via-slate-900 to-indigo-950 text-white rounded-2xl p-6 sm:p-8 shadow-md relative overflow-hidden">
+        <div className="absolute right-6 top-6 bottom-6 opacity-15 pointer-events-none hidden md:flex items-center">
+          <ApolloLogo variant="icon-only" size="xl" className="w-64 h-64 scale-150" />
         </div>
         
         <div className="relative z-10 max-w-3xl">
-          <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-sky-500/20 border border-sky-400/30 text-sky-200 text-xs font-semibold mb-4">
-            <span className="w-2 h-2 rounded-full bg-sky-400 animate-pulse"></span>
-            <span>MySQL 8.0+ Patient Flow Analytical System</span>
+          <div className="flex flex-wrap items-center gap-3 mb-4">
+            <ApolloLogo variant="horizontal" size="sm" theme="dark" />
+            <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-sky-500/20 border border-sky-400/30 text-sky-200 text-xs font-semibold">
+              <span className="w-2 h-2 rounded-full bg-sky-400 animate-pulse"></span>
+              <span>MySQL 8.0+ Operational Intelligence Engine</span>
+            </div>
           </div>
           <h1 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight text-white mb-3">
             Apollo Hospitals Patient Flow & Operational Analysis
           </h1>
           <p className="text-slate-300 text-sm sm:text-base leading-relaxed mb-6">
-            End-to-end SQL analysis evaluating 2,500 admissions, bed utilization across 20 departments, waiting-time triage bottlenecks, length of stay, and readmission rates across 4 synthetic Apollo facilities.
+            End-to-end SQL analysis evaluating 2,500 admissions, bed utilization across 20 departments, waiting-time triage bottlenecks, length of stay, and readmission rates across 4 Apollo facilities.
           </p>
 
           <div className="flex flex-wrap gap-3">
