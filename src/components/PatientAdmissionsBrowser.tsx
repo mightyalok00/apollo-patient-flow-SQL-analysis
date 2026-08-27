@@ -21,6 +21,8 @@ export const PatientAdmissionsBrowser: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState<string>('');
   const [hospitalFilter, setHospitalFilter] = useState<number>(0);
   const [deptFilter, setDeptFilter] = useState<number>(0);
+  const [typeFilter, setTypeFilter] = useState<string>('all');
+  const [waitTierFilter, setWaitTierFilter] = useState<string>('all');
   const [readmissionOnly, setReadmissionOnly] = useState<boolean>(false);
   const [currentPage, setCurrentPage] = useState<number>(1);
   const rowsPerPage = 15;
@@ -29,6 +31,13 @@ export const PatientAdmissionsBrowser: React.FC = () => {
   const filteredAdmissions = SAMPLE_ADMISSIONS.filter(adm => {
     if (hospitalFilter !== 0 && adm.hospital_id !== hospitalFilter) return false;
     if (deptFilter !== 0 && adm.department_id !== deptFilter) return false;
+    if (typeFilter !== 'all' && adm.admission_type !== typeFilter) return false;
+    if (waitTierFilter !== 'all') {
+      if (waitTierFilter === 'fast' && adm.wait_time_minutes >= 45) return false;
+      if (waitTierFilter === 'standard' && (adm.wait_time_minutes < 45 || adm.wait_time_minutes > 60)) return false;
+      if (waitTierFilter === 'moderate' && (adm.wait_time_minutes <= 60 || adm.wait_time_minutes > 90)) return false;
+      if (waitTierFilter === 'critical' && adm.wait_time_minutes <= 90) return false;
+    }
     if (readmissionOnly && adm.readmission_flag !== 1) return false;
     if (searchTerm) {
       const term = searchTerm.toLowerCase();
@@ -192,6 +201,30 @@ export const PatientAdmissionsBrowser: React.FC = () => {
               {DEPARTMENTS.slice(0, 5).map(d => <option key={d.department_id} value={d.department_id}>{d.department_name}</option>)}
             </select>
 
+            <select
+              value={typeFilter}
+              onChange={(e) => { setTypeFilter(e.target.value); setCurrentPage(1); }}
+              className="text-xs px-2.5 py-1.5 rounded-lg border border-slate-200 bg-white text-slate-700 font-medium"
+            >
+              <option value="all">All Admission Types</option>
+              <option value="Emergency">Emergency</option>
+              <option value="Elective">Elective</option>
+              <option value="Urgent">Urgent</option>
+              <option value="Referral">Referral</option>
+            </select>
+
+            <select
+              value={waitTierFilter}
+              onChange={(e) => { setWaitTierFilter(e.target.value); setCurrentPage(1); }}
+              className="text-xs px-2.5 py-1.5 rounded-lg border border-slate-200 bg-white text-slate-700 font-medium"
+            >
+              <option value="all">All Wait Tiers</option>
+              <option value="fast">&lt; 45 min</option>
+              <option value="standard">45 - 60 min</option>
+              <option value="moderate">60 - 90 min</option>
+              <option value="critical">&gt; 90 min</option>
+            </select>
+
             <label className="flex items-center space-x-1.5 text-xs text-slate-700 cursor-pointer font-medium select-none bg-slate-50 px-2.5 py-1.5 rounded-lg border border-slate-200">
               <input
                 type="checkbox"
@@ -201,6 +234,23 @@ export const PatientAdmissionsBrowser: React.FC = () => {
               />
               <span>Readmissions Only</span>
             </label>
+
+            {(hospitalFilter !== 0 || deptFilter !== 0 || typeFilter !== 'all' || waitTierFilter !== 'all' || readmissionOnly || searchTerm) && (
+              <button
+                onClick={() => {
+                  setHospitalFilter(0);
+                  setDeptFilter(0);
+                  setTypeFilter('all');
+                  setWaitTierFilter('all');
+                  setReadmissionOnly(false);
+                  setSearchTerm('');
+                  setCurrentPage(1);
+                }}
+                className="text-xs text-rose-600 hover:text-rose-800 bg-rose-50 px-2.5 py-1.5 rounded-lg border border-rose-200 font-semibold"
+              >
+                Clear
+              </button>
+            )}
           </div>
         )}
       </div>

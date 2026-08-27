@@ -27,10 +27,12 @@ interface BedOccupancyTrackerProps {
 
 export const BedOccupancyTracker: React.FC<BedOccupancyTrackerProps> = ({ onSelectQuery }) => {
   const [selectedHospitalId, setSelectedHospitalId] = useState<number>(0); // 0 = All
+  const [selectedDeptName, setSelectedDeptName] = useState<string>('All');
 
   // Calculate bed stats for departments
   const departmentBedData = DEPARTMENTS.filter(
-    d => selectedHospitalId === 0 || d.hospital_id === selectedHospitalId
+    d => (selectedHospitalId === 0 || d.hospital_id === selectedHospitalId) &&
+         (selectedDeptName === 'All' || d.department_name === selectedDeptName)
   ).map(dept => {
     const total = dept.total_beds;
     const isEmergency = dept.department_name === 'Emergency';
@@ -137,19 +139,49 @@ export const BedOccupancyTracker: React.FC<BedOccupancyTrackerProps> = ({ onSele
             <p className="text-xs text-slate-500">Departmental bed capacity breakdown across facilities</p>
           </div>
 
-          {/* Hospital selector */}
-          <div className="flex items-center space-x-2">
-            <span className="text-xs font-semibold text-slate-600">Filter Facility:</span>
-            <select
-              value={selectedHospitalId}
-              onChange={(e) => setSelectedHospitalId(Number(e.target.value))}
-              className="text-xs px-3 py-1.5 rounded-lg border border-slate-200 bg-white text-slate-700 font-medium focus:ring-2 focus:ring-sky-500"
-            >
-              <option value={0}>All 4 Hospitals</option>
-              {HOSPITALS.map(h => (
-                <option key={h.hospital_id} value={h.hospital_id}>{h.hospital_name}</option>
-              ))}
-            </select>
+          {/* Filter selectors */}
+          <div className="flex flex-wrap items-center gap-2">
+            <div className="flex items-center space-x-1.5">
+              <span className="text-xs font-semibold text-slate-600">Facility:</span>
+              <select
+                value={selectedHospitalId}
+                onChange={(e) => setSelectedHospitalId(Number(e.target.value))}
+                className="text-xs px-2.5 py-1.5 rounded-lg border border-slate-200 bg-white text-slate-700 font-medium focus:ring-2 focus:ring-sky-500"
+              >
+                <option value={0}>All 4 Hospitals</option>
+                {HOSPITALS.map(h => (
+                  <option key={h.hospital_id} value={h.hospital_id}>{h.hospital_name}</option>
+                ))}
+              </select>
+            </div>
+
+            <div className="flex items-center space-x-1.5">
+              <span className="text-xs font-semibold text-slate-600">Dept:</span>
+              <select
+                value={selectedDeptName}
+                onChange={(e) => setSelectedDeptName(e.target.value)}
+                className="text-xs px-2.5 py-1.5 rounded-lg border border-slate-200 bg-white text-slate-700 font-medium focus:ring-2 focus:ring-sky-500"
+              >
+                <option value="All">All Departments</option>
+                <option value="Emergency">Emergency</option>
+                <option value="Cardiology">Cardiology</option>
+                <option value="Orthopedics">Orthopedics</option>
+                <option value="General Medicine">General Medicine</option>
+                <option value="Neurology">Neurology</option>
+              </select>
+            </div>
+
+            {(selectedHospitalId !== 0 || selectedDeptName !== 'All') && (
+              <button
+                onClick={() => {
+                  setSelectedHospitalId(0);
+                  setSelectedDeptName('All');
+                }}
+                className="text-xs text-rose-600 hover:text-rose-800 bg-rose-50 px-2.5 py-1.5 rounded-lg border border-rose-200 font-semibold"
+              >
+                Reset
+              </button>
+            )}
           </div>
         </div>
 

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useMemo } from 'react';
 import { 
   Users, 
   Clock, 
@@ -10,7 +10,8 @@ import {
   TrendingUp,
   Stethoscope,
   ChevronRight,
-  Flame
+  Flame,
+  Info
 } from 'lucide-react';
 import { 
   BarChart, 
@@ -23,11 +24,17 @@ import {
   Cell
 } from 'recharts';
 import { 
+  HOSPITALS,
+  DEPARTMENTS,
+  DOCTORS,
   HOSPITAL_METRICS, 
   DEPARTMENT_VOLUME_DATA, 
   BUSINESS_FINDINGS, 
   WAIT_TIME_CLASSIFICATION 
 } from '../data/hospitalData';
+import { SAMPLE_ADMISSIONS } from '../data/sampleDataset';
+import { PatientFlowTrendsSection } from './PatientFlowTrendsSection';
+import { DashboardFilterBar, DashboardFilterState, INITIAL_FILTER_STATE } from './DashboardFilterBar';
 
 interface DashboardOverviewProps {
   onSelectQuery: (questionNumber: number) => void;
@@ -38,6 +45,212 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
   onSelectQuery, 
   onNavigateTab 
 }) => {
+  // Global interactive filter state
+  const [filters, setFilters] = useState<DashboardFilterState>(INITIAL_FILTER_STATE);
+
+  // Filter the core 2,500 admissions dataset reactively
+  const filteredAdmissions = useMemo(() => {
+    return SAMPLE_ADMISSIONS.filter((adm) => {
+      // 1. Hospital Filter
+      if (filters.hospitalId !== 'all' && adm.hospital_id !== Number(filters.hospitalId)) {
+        return false;
+      }
+
+      // 2. Department Filter
+      if (filters.departmentName !== 'all') {
+        const dept = DEPARTMENTS.find(d => d.department_id === adm.department_id);
+        if (!dept || dept.department_name !== filters.departmentName) {
+          return false;
+        }
+      }
+
+      // 3. Admission Type Filter
+      if (filters.admissionType !== 'all' && adm.admission_type !== filters.admissionType) {
+        return false;
+      }
+
+      // 4. Waiting Time Tier Filter
+      if (filters.waitTimeTier !== 'all') {
+        if (filters.waitTimeTier === 'fast' && adm.wait_time_minutes >= 45) return false;
+        if (filters.waitTimeTier === 'standard' && (adm.wait_time_minutes < 45 || adm.wait_time_minutes > 60)) return false;
+        if (filters.waitTimeTier === 'moderate' && (adm.wait_time_minutes <= 60 || adm.wait_time_minutes > 90)) return false;
+        if (filters.waitTimeTier === 'critical' && adm.wait_time_minutes <= 90) return false;
+      }
+
+      // 5. Readmission Flag Filter
+      if (filters.readmissionOnly && adm.readmission_flag !== 1) {
+        return false;
+      }
+
+      // 6. Disease / Diagnosis Keyword Search
+      if (filters.searchDisease.trim()) {
+        const kw = filters.searchDisease.toLowerCase();
+        if (!adm.disease.toLowerCase().includes(kw)) {
+          return false;
+        }
+      }
+
+      return true;
+    });
+  }, [filters]);
+
+  // Compute dynamic KPI metrics from the active filtered slice
+  const kpiStats = useMemo(() => {
+    const count = filteredAdmissions.length;
+    if (count === 0) {
+      return {
+        totalAdmissions: 0,
+        avgWaitMinutes: '0.00',
+        avgLosDays: '0.00',
+        readmissionRatePct: '0.0',
+        bedCapacityPct: '0.0',
+        staffCount: 0,
+        subLabelAdmissions: 'No matching records',
+        subLabelWait: 'N/A',
+        subLabelLos: 'N/A',
+        subLabelReadm: 'N/A'
+      };
+    }
+
+    const totalWait = filteredAdmissions.reduce((acc, a) => acc + a.wait_time_minutes, 0);
+    const avgWait = (totalWait / count).toFixed(2);
+
+    // Compute approximate Length of Stay
+    const totalLos = filteredAdmissions.reduce((acc, a) => {
+      const admTime = new Date(a.admission_date).getTime();
+      const disTime = a.discharge_date ? new Date(a.discharge_date).getTime() : admTime + 4.41 * 24 * 60 * 60 * 1000;
+      const los = (disTime - admTime) / (1000 * 60 * 60 * 24);
+      return acc + (isNaN(los) ? 4.41 : los);
+    }, 0);
+    const avgLos = (totalLos / count).toFixed(2);
+
+    // Readmission rate
+    const readmCount = filteredAdmissions.filter(a => a.readmission_flag === 1).length;
+    const readmRate = ((readmCount / count) * 100).toFixed(1);
+
+    // Unique active doctors
+    const uniqueDocs = new Set(filteredAdmissions.map(a => a.doctor_id)).size;
+
+    // Bed capacity ratio estimation
+    const baseTotalBeds = filters.hospitalId === 'all' 
+      ? 680 
+      : DEPARTMENTS.filter(d => d.hospital_id === Number(filters.hospitalId)).reduce((sum, d) => sum + d.total_beds, 0);
+    const activeBedsOccupied = Math.min(baseTotalBeds, Math.round((count / 2500) * 309));
+    const bedCapacityPct = ((activeBedsOccupied / Math.max(1, baseTotalBeds)) * 100).toFixed(1);
+
+    // Dynamic contextual sub-labels
+    const hyderabadCount = filteredAdmissions.filter(a => a.hospital_id === 4).length;
+    const hydPct = ((hyderabadCount / count) * 100).toFixed(0);
+
+    const emergencyAdmissions = filteredAdmissions.filter(a => {
+      const dept = DEPARTMENTS.find(d => d.department_id === a.department_id);
+      return dept?.department_name === 'Emergency' || a.admission_type === 'Emergency';
+    });
+    const emergencyAvgWait = emergencyAdmissions.length > 0
+      ? (emergencyAdmissions.reduce((s, a) => s + a.wait_time_minutes, 0) / emergencyAdmissions.length).toFixed(0)
+      : avgWait;
+
+    return {
+      totalAdmissions: count,
+      avgWaitMinutes: avgWait,
+      avgLosDays: avgLos,
+      readmissionRatePct: `${readmRate}%`,
+      bedCapacityPct: `${bedCapacityPct}%`,
+      staffCount: uniqueDocs || 60,
+      subLabelAdmissions: filters.hospitalId === 'all' ? `Hyderabad: ${hyderabadCount} (${hydPct}%)` : `Filtered Hospital Slice`,
+      subLabelWait: `Emergency: ~${emergencyAvgWait} min`,
+      subLabelLos: `Filtered Mean LOS: ${avgLos}d`,
+      subLabelReadm: `${readmCount} readmitted (${readmRate}%)`
+    };
+  }, [filteredAdmissions, filters.hospitalId]);
+
+  // Compute dynamic hospital metrics based on filtered records
+  const dynamicHospitalMetrics = useMemo(() => {
+    return HOSPITALS.map((h) => {
+      const hospAdmissions = filteredAdmissions.filter(a => a.hospital_id === h.hospital_id);
+      const totalHosp = hospAdmissions.length;
+      
+      const emergAdmissions = hospAdmissions.filter(a => {
+        const d = DEPARTMENTS.find(dept => dept.department_id === a.department_id);
+        return d?.department_name === 'Emergency' || a.admission_type === 'Emergency';
+      });
+
+      const avgEmergWait = emergAdmissions.length > 0
+        ? Math.round(emergAdmissions.reduce((sum, a) => sum + a.wait_time_minutes, 0) / emergAdmissions.length)
+        : totalHosp > 0 
+          ? Math.round(hospAdmissions.reduce((sum, a) => sum + a.wait_time_minutes, 0) / totalHosp) 
+          : 0;
+
+      const readmCount = hospAdmissions.filter(a => a.readmission_flag === 1).length;
+      const readmRate = totalHosp > 0 ? ((readmCount / totalHosp) * 100).toFixed(1) : '0.0';
+
+      return {
+        hospital_name: h.hospital_name,
+        city: h.city,
+        admissions: totalHosp,
+        emergency_wait: avgEmergWait,
+        readmission_rate: parseFloat(readmRate),
+      };
+    });
+  }, [filteredAdmissions]);
+
+  // Compute dynamic department breakdown based on filtered records
+  const dynamicDepartmentVolume = useMemo(() => {
+    const deptNames = ['Emergency', 'Cardiology', 'Orthopedics', 'General Medicine', 'Neurology'];
+    const colors: Record<string, string> = {
+      'Emergency': '#ef4444',
+      'Cardiology': '#0284c7',
+      'Orthopedics': '#f59e0b',
+      'General Medicine': '#10b981',
+      'Neurology': '#8b5cf6'
+    };
+
+    return deptNames.map((name) => {
+      const deptAdmissions = filteredAdmissions.filter(a => {
+        const d = DEPARTMENTS.find(dept => dept.department_id === a.department_id);
+        return d?.department_name === name;
+      });
+
+      const totalDept = deptAdmissions.length;
+      const avgWait = totalDept > 0 
+        ? Math.round(deptAdmissions.reduce((sum, a) => sum + a.wait_time_minutes, 0) / totalDept)
+        : 0;
+
+      return {
+        name,
+        admissions: totalDept,
+        avgWait,
+        color: colors[name] || '#0284c7'
+      };
+    });
+  }, [filteredAdmissions]);
+
+  // Synchronize facility with PatientFlowTrends
+  const facilityMapToTrend: Record<string, string> = {
+    '1': 'delhi',
+    '2': 'mumbai',
+    '3': 'bangalore',
+    '4': 'hyderabad',
+    'all': 'all'
+  };
+
+  const trendMapToFacility: Record<string, string> = {
+    'delhi': '1',
+    'mumbai': '2',
+    'bangalore': '3',
+    'hyderabad': '4',
+    'all': 'all'
+  };
+
+  const currentTrendFacility = facilityMapToTrend[filters.hospitalId] || 'all';
+
+  const handleTrendFacilityChange = (facility: string) => {
+    setFilters(prev => ({
+      ...prev,
+      hospitalId: trendMapToFacility[facility] || 'all'
+    }));
+  };
+
   return (
     <div className="space-y-8 pb-12">
       {/* Hero / Executive Header */}
@@ -62,7 +275,7 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
             <button
               id="btn-run-sql-lab"
               onClick={() => onNavigateTab('sql-workbench')}
-              className="inline-flex items-center space-x-2 bg-sky-500 hover:bg-sky-400 text-slate-950 font-bold px-4 py-2.5 rounded-xl text-sm transition-all shadow-sm"
+              className="inline-flex items-center space-x-2 bg-sky-500 hover:bg-sky-400 text-slate-950 font-bold px-4 py-2.5 rounded-xl text-sm transition-all shadow-sm cursor-pointer"
             >
               <span>Explore 15 SQL Queries</span>
               <ChevronRight className="w-4 h-4" />
@@ -70,7 +283,7 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
             <button
               id="btn-view-bottlenecks"
               onClick={() => onNavigateTab('bottlenecks')}
-              className="inline-flex items-center space-x-2 bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 px-4 py-2.5 rounded-xl text-sm font-semibold transition-all"
+              className="inline-flex items-center space-x-2 bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 px-4 py-2.5 rounded-xl text-sm font-semibold transition-all cursor-pointer"
             >
               <AlertTriangle className="w-4 h-4 text-amber-400" />
               <span>Bottleneck Rankings</span>
@@ -78,6 +291,15 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
           </div>
         </div>
       </div>
+
+      {/* Global Interactive Multi-Dimensional Filter Bar */}
+      <DashboardFilterBar
+        filters={filters}
+        onFilterChange={setFilters}
+        onResetFilters={() => setFilters(INITIAL_FILTER_STATE)}
+        filteredCount={filteredAdmissions.length}
+        totalCount={SAMPLE_ADMISSIONS.length}
+      />
 
       {/* Critical Operational Highlight Banner */}
       <div className="bg-amber-50 border-l-4 border-amber-500 p-4 rounded-xl flex flex-col md:flex-row items-start md:items-center justify-between gap-4 shadow-xs">
@@ -95,24 +317,26 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
         <button
           id="btn-inspect-q14"
           onClick={() => onSelectQuery(14)}
-          className="shrink-0 text-xs font-bold text-amber-900 bg-amber-200/80 hover:bg-amber-200 px-3 py-1.5 rounded-lg transition-all flex items-center space-x-1"
+          className="shrink-0 text-xs font-bold text-amber-900 bg-amber-200/80 hover:bg-amber-200 px-3 py-1.5 rounded-lg transition-all flex items-center space-x-1 cursor-pointer"
         >
           <span>Run Bottleneck Query (Q14)</span>
           <ArrowUpRight className="w-3.5 h-3.5" />
         </button>
       </div>
 
-      {/* 6 Core Executive KPI Cards */}
+      {/* 6 Dynamic Executive KPI Cards (Reacts to Filters) */}
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
         <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-xs">
           <div className="flex items-center justify-between text-slate-500 mb-2">
             <span className="text-xs font-semibold uppercase tracking-wider">Admissions</span>
             <Users className="w-4 h-4 text-sky-600" />
           </div>
-          <div className="text-2xl font-black text-slate-900">2,500</div>
-          <div className="text-[11px] text-slate-500 mt-1 flex items-center text-emerald-600 font-medium">
-            <TrendingUp className="w-3 h-3 mr-1" />
-            <span>Hyderabad: 654 (26%)</span>
+          <div className="text-2xl font-black text-slate-900">
+            {kpiStats.totalAdmissions.toLocaleString()}
+          </div>
+          <div className="text-[11px] text-slate-500 mt-1 flex items-center text-emerald-600 font-medium truncate">
+            <TrendingUp className="w-3 h-3 mr-1 shrink-0" />
+            <span className="truncate">{kpiStats.subLabelAdmissions}</span>
           </div>
         </div>
 
@@ -121,9 +345,11 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
             <span className="text-xs font-semibold uppercase tracking-wider">Avg Wait Time</span>
             <Clock className="w-4 h-4 text-amber-600" />
           </div>
-          <div className="text-2xl font-black text-slate-900">62.81 <span className="text-xs font-medium text-slate-500">min</span></div>
-          <div className="text-[11px] text-slate-500 mt-1 flex items-center text-rose-600 font-medium">
-            <span>Emergency: ~103 min</span>
+          <div className="text-2xl font-black text-slate-900">
+            {kpiStats.avgWaitMinutes} <span className="text-xs font-medium text-slate-500">min</span>
+          </div>
+          <div className="text-[11px] text-slate-500 mt-1 flex items-center text-rose-600 font-medium truncate">
+            <span className="truncate">{kpiStats.subLabelWait}</span>
           </div>
         </div>
 
@@ -132,9 +358,11 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
             <span className="text-xs font-semibold uppercase tracking-wider">Avg Stay (LOS)</span>
             <Bed className="w-4 h-4 text-indigo-600" />
           </div>
-          <div className="text-2xl font-black text-slate-900">4.41 <span className="text-xs font-medium text-slate-500">days</span></div>
-          <div className="text-[11px] text-slate-500 mt-1 text-slate-600 font-medium">
-            <span>Max stay: 4.80d (Delhi)</span>
+          <div className="text-2xl font-black text-slate-900">
+            {kpiStats.avgLosDays} <span className="text-xs font-medium text-slate-500">days</span>
+          </div>
+          <div className="text-[11px] text-slate-500 mt-1 text-slate-600 font-medium truncate">
+            <span className="truncate">{kpiStats.subLabelLos}</span>
           </div>
         </div>
 
@@ -143,9 +371,11 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
             <span className="text-xs font-semibold uppercase tracking-wider">Readmissions</span>
             <AlertTriangle className="w-4 h-4 text-orange-600" />
           </div>
-          <div className="text-2xl font-black text-slate-900">34.6%</div>
-          <div className="text-[11px] text-orange-600 mt-1 font-medium">
-            <span>Delhi Ortho: 40.77%</span>
+          <div className="text-2xl font-black text-slate-900">
+            {kpiStats.readmissionRatePct}
+          </div>
+          <div className="text-[11px] text-orange-600 mt-1 font-medium truncate">
+            <span className="truncate">{kpiStats.subLabelReadm}</span>
           </div>
         </div>
 
@@ -154,7 +384,9 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
             <span className="text-xs font-semibold uppercase tracking-wider">Bed Capacity</span>
             <CheckCircle2 className="w-4 h-4 text-emerald-600" />
           </div>
-          <div className="text-2xl font-black text-slate-900">45.4%</div>
+          <div className="text-2xl font-black text-slate-900">
+            {kpiStats.bedCapacityPct}
+          </div>
           <div className="text-[11px] text-emerald-600 mt-1 font-medium">
             <span>0% Critical (&gt;90%)</span>
           </div>
@@ -162,15 +394,26 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
 
         <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-xs">
           <div className="flex items-center justify-between text-slate-500 mb-2">
-            <span className="text-xs font-semibold uppercase tracking-wider">Medical Staff</span>
+            <span className="text-xs font-semibold uppercase tracking-wider">Active Staff</span>
             <Stethoscope className="w-4 h-4 text-teal-600" />
           </div>
-          <div className="text-2xl font-black text-slate-900">60 <span className="text-xs font-medium text-slate-500">docs</span></div>
+          <div className="text-2xl font-black text-slate-900">
+            {kpiStats.staffCount} <span className="text-xs font-medium text-slate-500">docs</span>
+          </div>
           <div className="text-[11px] text-slate-500 mt-1 font-medium">
-            <span>~41.7 patients / doc</span>
+            <span>
+              ~{kpiStats.staffCount > 0 ? (kpiStats.totalAdmissions / kpiStats.staffCount).toFixed(1) : 0} pts/doc
+            </span>
           </div>
         </div>
       </div>
+
+      {/* Real-time Patient Flow Trends & Admissions Growth (Recharts) */}
+      <PatientFlowTrendsSection 
+        onSelectQuery={onSelectQuery} 
+        externalFacility={currentTrendFacility}
+        onFacilityChange={handleTrendFacilityChange}
+      />
 
       {/* Hospital Metrics & Department Charts Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
@@ -180,12 +423,14 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
             <div className="flex items-center justify-between mb-4">
               <div>
                 <h3 className="font-bold text-base text-slate-900">Hospital Patient Volume & Emergency Wait</h3>
-                <p className="text-xs text-slate-500">Cross-hospital admission load vs Emergency triage latency</p>
+                <p className="text-xs text-slate-500">
+                  {filteredAdmissions.length < SAMPLE_ADMISSIONS.length ? 'Filtered volume load vs Emergency triage latency' : 'Cross-hospital admission load vs Emergency triage latency'}
+                </p>
               </div>
               <button
                 id="btn-inspect-q2"
                 onClick={() => onSelectQuery(2)}
-                className="text-xs text-sky-600 font-semibold hover:underline flex items-center"
+                className="text-xs text-sky-600 font-semibold hover:underline flex items-center cursor-pointer"
               >
                 <span>Query 2</span>
                 <ArrowUpRight className="w-3 h-3 ml-0.5" />
@@ -194,7 +439,7 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
 
             <div className="h-64 w-full">
               <ResponsiveContainer width="100%" height="100%">
-                <BarChart data={HOSPITAL_METRICS} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+                <BarChart data={dynamicHospitalMetrics} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
                   <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
                   <XAxis dataKey="city" tick={{ fontSize: 12, fill: '#64748b' }} axisLine={false} tickLine={false} />
                   <YAxis tick={{ fontSize: 11, fill: '#64748b' }} axisLine={false} tickLine={false} />
@@ -202,7 +447,7 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
                     contentStyle={{ backgroundColor: '#0f172a', borderRadius: '8px', color: '#fff', border: 'none', fontSize: '12px' }}
                     formatter={(value: any, name: string) => [
                       name === 'admissions' ? `${value} Admissions` : `${value} min wait`,
-                      name === 'admissions' ? 'Total Volume' : 'Emergency Avg Wait'
+                      name === 'admissions' ? 'Filtered Volume' : 'Emergency Avg Wait'
                     ]}
                   />
                   <Bar dataKey="admissions" fill="#0284c7" radius={[6, 6, 0, 0]} name="admissions" />
@@ -213,8 +458,25 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
           </div>
 
           <div className="grid grid-cols-4 gap-2 pt-4 border-t border-slate-100 text-center">
-            {HOSPITAL_METRICS.map(h => (
-              <div key={h.hospital_name} className="p-2 bg-slate-50 rounded-lg">
+            {dynamicHospitalMetrics.map(h => (
+              <div 
+                key={h.hospital_name} 
+                onClick={() => {
+                  const hospObj = HOSPITALS.find(item => item.hospital_name === h.hospital_name);
+                  if (hospObj) {
+                    setFilters(prev => ({
+                      ...prev,
+                      hospitalId: prev.hospitalId === String(hospObj.hospital_id) ? 'all' : String(hospObj.hospital_id)
+                    }));
+                  }
+                }}
+                className={`p-2 rounded-lg cursor-pointer transition-all ${
+                  filters.hospitalId !== 'all' && HOSPITALS.find(item => item.hospital_name === h.hospital_name)?.hospital_id === Number(filters.hospitalId)
+                    ? 'bg-sky-100 border border-sky-300 font-bold'
+                    : 'bg-slate-50 hover:bg-slate-100'
+                }`}
+                title="Click to filter by this hospital"
+              >
                 <div className="text-xs font-bold text-slate-800">{h.city}</div>
                 <div className="text-sm font-extrabold text-sky-700">{h.admissions}</div>
                 <div className="text-[10px] text-slate-500">{h.readmission_rate}% readm</div>
@@ -234,7 +496,7 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
               <button
                 id="btn-inspect-q3"
                 onClick={() => onSelectQuery(3)}
-                className="text-xs text-sky-600 font-semibold hover:underline flex items-center"
+                className="text-xs text-sky-600 font-semibold hover:underline flex items-center cursor-pointer"
               >
                 <span>Query 3</span>
                 <ArrowUpRight className="w-3 h-3 ml-0.5" />
@@ -242,21 +504,37 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
             </div>
 
             <div className="space-y-3">
-              {DEPARTMENT_VOLUME_DATA.map((dept) => {
-                const pct = ((dept.admissions / 2500) * 100).toFixed(1);
+              {dynamicDepartmentVolume.map((dept) => {
+                const totalFiltered = Math.max(1, filteredAdmissions.length);
+                const pct = ((dept.admissions / totalFiltered) * 100).toFixed(1);
+                const isSelected = filters.departmentName === dept.name;
+
                 return (
-                  <div key={dept.name} className="space-y-1">
+                  <div 
+                    key={dept.name} 
+                    onClick={() => {
+                      setFilters(prev => ({
+                        ...prev,
+                        departmentName: prev.departmentName === dept.name ? 'all' : dept.name
+                      }));
+                    }}
+                    className={`p-2 rounded-xl cursor-pointer transition-all ${
+                      isSelected ? 'bg-sky-50 border border-sky-200' : 'hover:bg-slate-50'
+                    }`}
+                  >
                     <div className="flex justify-between text-xs font-semibold">
-                      <span className="text-slate-800">{dept.name}</span>
+                      <span className={`${isSelected ? 'text-sky-900 font-bold' : 'text-slate-800'}`}>
+                        {dept.name} {isSelected && '✓'}
+                      </span>
                       <span className="text-slate-600">{dept.admissions} admissions ({pct}%)</span>
                     </div>
-                    <div className="w-full h-2 bg-slate-100 rounded-full overflow-hidden">
+                    <div className="w-full h-2 bg-slate-100 rounded-full overflow-hidden mt-1">
                       <div 
                         className="h-full rounded-full transition-all"
                         style={{ width: `${pct}%`, backgroundColor: dept.color }}
                       />
                     </div>
-                    <div className="flex justify-between text-[10px] text-slate-500">
+                    <div className="flex justify-between text-[10px] text-slate-500 mt-1">
                       <span>Avg Wait: <span className={dept.avgWait > 80 ? 'text-rose-600 font-bold' : 'font-medium'}>{dept.avgWait} min</span></span>
                       <span>{dept.name === 'Emergency' ? '⚠️ High Triage Strain' : 'Stable Capacity'}</span>
                     </div>
@@ -269,7 +547,7 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
           <div className="mt-4 pt-3 border-t border-slate-100">
             <div className="flex items-center justify-between text-xs">
               <span className="font-semibold text-slate-700">Waiting Time Triage Tiers:</span>
-              <span className="text-slate-500">2,500 Total</span>
+              <span className="text-slate-500">{filteredAdmissions.length.toLocaleString()} Filtered</span>
             </div>
             <div className="grid grid-cols-3 gap-2 mt-2">
               {WAIT_TIME_CLASSIFICATION.map(tier => (
