@@ -159,7 +159,7 @@ export default function App() {
 
           <div className="flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-500">
             <div className="flex items-center space-x-2">
-              <span>Apollo Hospitals Patient Flow SQL Analytics • Academic & Operational Decision Support System</span>
+              <span>Apollo Hospitals Patient Flow SQL Analytics • Developed by <strong className="text-slate-300 font-bold">Alok Agarwal</strong></span>
             </div>
 
             <div className="flex items-center space-x-4">

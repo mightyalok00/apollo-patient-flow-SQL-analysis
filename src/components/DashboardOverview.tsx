@@ -261,11 +261,17 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
         </div>
         
         <div className="relative z-10 max-w-3xl">
-          <div className="flex flex-wrap items-center gap-3 mb-4">
-            <ApolloLogo variant="horizontal" size="sm" theme="dark" />
+          <div className="flex flex-wrap items-center gap-2.5 mb-4">
             <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-sky-500/20 border border-sky-400/30 text-sky-200 text-xs font-semibold">
               <span className="w-2 h-2 rounded-full bg-sky-400 animate-pulse"></span>
               <span>MySQL 8.0+ Operational Intelligence Engine</span>
+            </div>
+            <div className="inline-flex items-center space-x-1.5 px-2.5 py-1 rounded-full bg-slate-800/80 border border-slate-700 text-slate-300 text-xs">
+              <span>Analysis by <strong className="text-sky-300 font-bold">Alok Agarwal</strong></span>
+            </div>
+            <div className="inline-flex items-center space-x-1.5 px-2.5 py-1 rounded-full bg-emerald-500/15 border border-emerald-500/30 text-emerald-300 text-xs">
+              <span>Verified Clean Dataset</span>
+              <span className="text-emerald-400 font-bold">• 0 Duplicates</span>
             </div>
           </div>
           <h1 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight text-white mb-3">
@@ -329,84 +335,96 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
       </div>
 
       {/* 6 Dynamic Executive KPI Cards (Reacts to Filters) */}
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
-        <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-xs">
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3 sm:gap-4">
+        <div className="bg-white p-4 sm:p-4.5 rounded-2xl border border-slate-200/90 shadow-xs hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 group">
           <div className="flex items-center justify-between text-slate-500 mb-2">
-            <span className="text-xs font-semibold uppercase tracking-wider">Admissions</span>
-            <Users className="w-4 h-4 text-sky-600" />
+            <span className="text-[11px] font-bold uppercase tracking-wider text-slate-500">Admissions</span>
+            <div className="w-8 h-8 rounded-xl bg-sky-50 text-sky-600 flex items-center justify-center group-hover:bg-sky-600 group-hover:text-white transition-colors">
+              <Users className="w-4 h-4" />
+            </div>
           </div>
-          <div className="text-2xl font-black text-slate-900">
+          <div className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">
             {kpiStats.totalAdmissions.toLocaleString()}
           </div>
-          <div className="text-[11px] text-slate-500 mt-1 flex items-center text-emerald-600 font-medium truncate">
+          <div className="text-[11px] mt-1.5 flex items-center text-emerald-600 font-semibold truncate">
             <TrendingUp className="w-3 h-3 mr-1 shrink-0" />
             <span className="truncate">{kpiStats.subLabelAdmissions}</span>
           </div>
         </div>
 
-        <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-xs">
+        <div className="bg-white p-4 sm:p-4.5 rounded-2xl border border-slate-200/90 shadow-xs hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 group">
           <div className="flex items-center justify-between text-slate-500 mb-2">
-            <span className="text-xs font-semibold uppercase tracking-wider">Avg Wait Time</span>
-            <Clock className="w-4 h-4 text-amber-600" />
+            <span className="text-[11px] font-bold uppercase tracking-wider text-slate-500">Avg Wait Time</span>
+            <div className="w-8 h-8 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center group-hover:bg-amber-500 group-hover:text-white transition-colors">
+              <Clock className="w-4 h-4" />
+            </div>
           </div>
-          <div className="text-2xl font-black text-slate-900">
-            {kpiStats.avgWaitMinutes} <span className="text-xs font-medium text-slate-500">min</span>
+          <div className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">
+            {kpiStats.avgWaitMinutes} <span className="text-xs font-normal text-slate-500 font-sans">min</span>
           </div>
-          <div className="text-[11px] text-slate-500 mt-1 flex items-center text-rose-600 font-medium truncate">
+          <div className="text-[11px] mt-1.5 flex items-center text-rose-600 font-semibold truncate">
             <span className="truncate">{kpiStats.subLabelWait}</span>
           </div>
         </div>
 
-        <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-xs">
+        <div className="bg-white p-4 sm:p-4.5 rounded-2xl border border-slate-200/90 shadow-xs hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 group">
           <div className="flex items-center justify-between text-slate-500 mb-2">
-            <span className="text-xs font-semibold uppercase tracking-wider">Avg Stay (LOS)</span>
-            <Bed className="w-4 h-4 text-indigo-600" />
+            <span className="text-[11px] font-bold uppercase tracking-wider text-slate-500">Avg Stay (LOS)</span>
+            <div className="w-8 h-8 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center group-hover:bg-indigo-600 group-hover:text-white transition-colors">
+              <Bed className="w-4 h-4" />
+            </div>
           </div>
-          <div className="text-2xl font-black text-slate-900">
-            {kpiStats.avgLosDays} <span className="text-xs font-medium text-slate-500">days</span>
+          <div className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">
+            {kpiStats.avgLosDays} <span className="text-xs font-normal text-slate-500 font-sans">days</span>
           </div>
-          <div className="text-[11px] text-slate-500 mt-1 text-slate-600 font-medium truncate">
+          <div className="text-[11px] text-slate-600 mt-1.5 font-medium truncate">
             <span className="truncate">{kpiStats.subLabelLos}</span>
           </div>
         </div>
 
-        <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-xs">
+        <div className="bg-white p-4 sm:p-4.5 rounded-2xl border border-slate-200/90 shadow-xs hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 group">
           <div className="flex items-center justify-between text-slate-500 mb-2">
-            <span className="text-xs font-semibold uppercase tracking-wider">Readmissions</span>
-            <AlertTriangle className="w-4 h-4 text-orange-600" />
+            <span className="text-[11px] font-bold uppercase tracking-wider text-slate-500">Readmissions</span>
+            <div className="w-8 h-8 rounded-xl bg-orange-50 text-orange-600 flex items-center justify-center group-hover:bg-orange-500 group-hover:text-white transition-colors">
+              <AlertTriangle className="w-4 h-4" />
+            </div>
           </div>
-          <div className="text-2xl font-black text-slate-900">
+          <div className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">
             {kpiStats.readmissionRatePct}
           </div>
-          <div className="text-[11px] text-orange-600 mt-1 font-medium truncate">
+          <div className="text-[11px] text-orange-600 mt-1.5 font-semibold truncate">
             <span className="truncate">{kpiStats.subLabelReadm}</span>
           </div>
         </div>
 
-        <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-xs">
+        <div className="bg-white p-4 sm:p-4.5 rounded-2xl border border-slate-200/90 shadow-xs hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 group">
           <div className="flex items-center justify-between text-slate-500 mb-2">
-            <span className="text-xs font-semibold uppercase tracking-wider">Bed Capacity</span>
-            <CheckCircle2 className="w-4 h-4 text-emerald-600" />
+            <span className="text-[11px] font-bold uppercase tracking-wider text-slate-500">Bed Capacity</span>
+            <div className="w-8 h-8 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center group-hover:bg-emerald-600 group-hover:text-white transition-colors">
+              <CheckCircle2 className="w-4 h-4" />
+            </div>
           </div>
-          <div className="text-2xl font-black text-slate-900">
+          <div className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">
             {kpiStats.bedCapacityPct}
           </div>
-          <div className="text-[11px] text-emerald-600 mt-1 font-medium">
-            <span>0% Critical (&gt;90%)</span>
+          <div className="text-[11px] text-emerald-600 mt-1.5 font-semibold">
+            <span>Optimal (0% &gt;90%)</span>
           </div>
         </div>
 
-        <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-xs">
+        <div className="bg-white p-4 sm:p-4.5 rounded-2xl border border-slate-200/90 shadow-xs hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 group">
           <div className="flex items-center justify-between text-slate-500 mb-2">
-            <span className="text-xs font-semibold uppercase tracking-wider">Active Staff</span>
-            <Stethoscope className="w-4 h-4 text-teal-600" />
+            <span className="text-[11px] font-bold uppercase tracking-wider text-slate-500">Active Staff</span>
+            <div className="w-8 h-8 rounded-xl bg-teal-50 text-teal-600 flex items-center justify-center group-hover:bg-teal-600 group-hover:text-white transition-colors">
+              <Stethoscope className="w-4 h-4" />
+            </div>
           </div>
-          <div className="text-2xl font-black text-slate-900">
-            {kpiStats.staffCount} <span className="text-xs font-medium text-slate-500">docs</span>
+          <div className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">
+            {kpiStats.staffCount} <span className="text-xs font-normal text-slate-500 font-sans">docs</span>
           </div>
-          <div className="text-[11px] text-slate-500 mt-1 font-medium">
+          <div className="text-[11px] text-slate-600 mt-1.5 font-medium">
             <span>
-              ~{kpiStats.staffCount > 0 ? (kpiStats.totalAdmissions / kpiStats.staffCount).toFixed(1) : 0} pts/doc
+              ~{kpiStats.staffCount > 0 ? (kpiStats.totalAdmissions / kpiStats.staffCount).toFixed(1) : 0} pts/doctor
             </span>
           </div>
         </div>

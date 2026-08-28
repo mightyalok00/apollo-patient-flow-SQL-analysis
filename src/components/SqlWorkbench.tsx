@@ -1,7 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { 
-  Play, 
-  RotateCcw, 
   Download, 
   Search, 
   CheckCircle, 
@@ -37,7 +35,7 @@ export const SqlWorkbench: React.FC<SqlWorkbenchProps> = ({ initialQuestionNumbe
   const [queryResult, setQueryResult] = useState<QueryExecutionResult | null>(null);
   const [isRunning, setIsRunning] = useState<boolean>(false);
   const [searchTerm, setSearchTerm] = useState<string>('');
-  const [activeTab, setActiveTab] = useState<'results' | 'explanation' | 'optimization'>('results');
+  const [activeTab, setActiveTab] = useState<'results' | 'explanation' | 'sql' | 'optimization'>('results');
   const [categoryFilter, setCategoryFilter] = useState<string>('All');
   const [copied, setCopied] = useState<boolean>(false);
   const [currentPage, setCurrentPage] = useState<number>(1);
@@ -73,27 +71,19 @@ export const SqlWorkbench: React.FC<SqlWorkbenchProps> = ({ initialQuestionNumbe
     }, 100);
   };
 
-  const handleRunQuery = () => {
-    setIsRunning(true);
-    setTimeout(() => {
+  // Automatically evaluate query when code is modified with debounce
+  useEffect(() => {
+    const timer = setTimeout(() => {
       if (queryCode.trim() === activeQuestion.sqlQuery.trim()) {
         setQueryResult(executePredefinedQuery(activeQuestion.questionNumber));
       } else {
         setQueryResult(executeCustomQuery(queryCode));
       }
       setIsRunning(false);
-      setCurrentPage(1);
-    }, 120);
-  };
+    }, 150);
 
-  const handleResetQuery = () => {
-    setQueryCode(activeQuestion.sqlQuery);
-    setIsRunning(true);
-    setTimeout(() => {
-      setQueryResult(executePredefinedQuery(activeQuestion.questionNumber));
-      setIsRunning(false);
-    }, 100);
-  };
+    return () => clearTimeout(timer);
+  }, [queryCode, activeQuestion]);
 
   const handleCopySQL = () => {
     navigator.clipboard.writeText(queryCode);
@@ -162,14 +152,14 @@ export const SqlWorkbench: React.FC<SqlWorkbenchProps> = ({ initialQuestionNumbe
           </p>
 
           {/* Category Filter Chips */}
-          <div className="flex flex-wrap gap-1 mb-3 pb-2 border-b border-slate-100">
+          <div className="flex flex-wrap gap-1.5 mb-3 pb-2.5 border-b border-slate-100">
             {['All', 'Window Functions', 'CTE / Bottleneck', 'Core Aggregates', 'Optimization'].map(cat => (
               <button
                 key={cat}
                 onClick={() => setCategoryFilter(cat)}
-                className={`text-[10px] font-semibold px-2 py-0.5 rounded-lg transition-all cursor-pointer ${
+                className={`text-[11px] font-bold px-2.5 py-1 rounded-lg transition-all cursor-pointer ${
                   categoryFilter === cat
-                    ? 'bg-slate-900 text-white'
+                    ? 'bg-slate-900 text-white shadow-xs'
                     : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
                 }`}
               >
@@ -189,14 +179,14 @@ export const SqlWorkbench: React.FC<SqlWorkbenchProps> = ({ initialQuestionNumbe
                   onClick={() => handleSelectQuestion(q)}
                   className={`w-full text-left p-2.5 rounded-xl border transition-all flex items-start space-x-2.5 cursor-pointer ${
                     isSelected
-                      ? 'bg-gradient-to-r from-sky-600 to-sky-700 text-white border-sky-600 shadow-xs'
-                      : 'bg-slate-50/70 hover:bg-slate-100 text-slate-700 border-slate-100'
+                      ? 'bg-sky-900 text-white border-sky-800 shadow-sm'
+                      : 'bg-slate-50/80 hover:bg-slate-100/90 text-slate-700 border-slate-200/60'
                   }`}
                 >
                   <span
                     className={`shrink-0 w-6 h-6 rounded-lg flex items-center justify-center text-xs font-black ${
                       isSelected
-                        ? 'bg-white text-sky-700 shadow-xs'
+                        ? 'bg-sky-500 text-slate-950 shadow-xs'
                         : 'bg-slate-200 text-slate-700'
                     }`}
                   >
@@ -204,14 +194,14 @@ export const SqlWorkbench: React.FC<SqlWorkbenchProps> = ({ initialQuestionNumbe
                   </span>
                   <div className="min-w-0 flex-1">
                     <div className="flex items-center justify-between">
-                      <span className="text-xs font-bold truncate">
+                      <span className={`text-xs font-bold truncate ${isSelected ? 'text-white' : 'text-slate-900'}`}>
                         {q.title}
                       </span>
                     </div>
                     <div className="flex items-center space-x-1.5 mt-0.5">
                       <span
                         className={`text-[10px] truncate ${
-                          isSelected ? 'text-sky-100 font-medium' : 'text-slate-500'
+                          isSelected ? 'text-sky-200 font-medium' : 'text-slate-500'
                         }`}
                       >
                         {q.section}
@@ -248,59 +238,6 @@ export const SqlWorkbench: React.FC<SqlWorkbenchProps> = ({ initialQuestionNumbe
           <p className="text-xs text-slate-600 leading-relaxed">{activeQuestion.description}</p>
         </div>
 
-        {/* SQL Code Box with Syntax Styling */}
-        <div className="bg-slate-900 rounded-2xl border border-slate-800 overflow-hidden shadow-sm">
-          <div className="flex items-center justify-between px-4 py-2.5 bg-slate-950 border-b border-slate-800">
-            <div className="flex items-center space-x-2 text-xs font-mono text-slate-400">
-              <Code2 className="w-4 h-4 text-sky-400" />
-              <span>Apollo_Patient_Flow_Query_Q{activeQuestion.questionNumber}.sql</span>
-            </div>
-
-            <div className="flex items-center space-x-2">
-              <button
-                id="btn-copy-sql"
-                onClick={handleCopySQL}
-                className="text-xs text-slate-400 hover:text-white px-2.5 py-1 rounded-lg hover:bg-slate-800 flex items-center space-x-1 transition-colors cursor-pointer"
-                title="Copy SQL Query"
-              >
-                {copied ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
-                <span className="hidden sm:inline">{copied ? 'Copied!' : 'Copy SQL'}</span>
-              </button>
-
-              <button
-                id="btn-reset-sql"
-                onClick={handleResetQuery}
-                className="text-xs text-slate-400 hover:text-white px-2.5 py-1 rounded-lg hover:bg-slate-800 flex items-center space-x-1 transition-colors cursor-pointer"
-                title="Reset SQL to original"
-              >
-                <RotateCcw className="w-3.5 h-3.5" />
-                <span className="hidden sm:inline">Reset</span>
-              </button>
-
-              <button
-                id="btn-execute-sql"
-                onClick={handleRunQuery}
-                disabled={isRunning}
-                className="bg-sky-500 hover:bg-sky-400 text-slate-950 font-extrabold px-3.5 py-1.5 rounded-lg text-xs flex items-center space-x-1.5 transition-all disabled:opacity-50 shadow-sm cursor-pointer"
-              >
-                <Play className={`w-3.5 h-3.5 ${isRunning ? 'animate-spin' : 'fill-slate-950'}`} />
-                <span>{isRunning ? 'Executing...' : 'Run Query'}</span>
-              </button>
-            </div>
-          </div>
-
-          <div className="p-4 font-mono text-xs text-emerald-400 bg-slate-900/95 overflow-x-auto">
-            <textarea
-              id="sql-editor-textarea"
-              value={queryCode}
-              onChange={(e) => setQueryCode(e.target.value)}
-              rows={8}
-              className="w-full bg-transparent text-emerald-300 font-mono text-xs focus:outline-hidden resize-y leading-relaxed"
-              spellCheck={false}
-            />
-          </div>
-        </div>
-
         {/* Execution Metadata & Tabs */}
         <div className="bg-white rounded-2xl border border-slate-200/80 shadow-xs overflow-hidden">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between px-4 py-3 border-b border-slate-200 bg-slate-50/80 gap-2">
@@ -327,6 +264,18 @@ export const SqlWorkbench: React.FC<SqlWorkbenchProps> = ({ initialQuestionNumbe
               >
                 <Lightbulb className="w-3.5 h-3.5" />
                 <span>Clinical Insights & Logic</span>
+              </button>
+              <button
+                id="tab-sql"
+                onClick={() => setActiveTab('sql')}
+                className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center space-x-1 cursor-pointer ${
+                  activeTab === 'sql'
+                    ? 'bg-sky-600 text-white shadow-xs'
+                    : 'text-slate-600 hover:bg-slate-200'
+                }`}
+              >
+                <Code2 className="w-3.5 h-3.5" />
+                <span>SQL Source</span>
               </button>
               {activeQuestion.questionNumber === 15 && (
                 <button
@@ -506,6 +455,30 @@ export const SqlWorkbench: React.FC<SqlWorkbenchProps> = ({ initialQuestionNumbe
                     </span>
                   ))}
                 </div>
+              </div>
+            </div>
+          )}
+
+          {/* SQL Source Tab View */}
+          {activeTab === 'sql' && (
+            <div className="p-5 space-y-4">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center space-x-2 text-xs font-mono text-slate-500">
+                  <Code2 className="w-4 h-4 text-sky-600" />
+                  <span>Apollo_Patient_Flow_Query_Q{activeQuestion.questionNumber}.sql</span>
+                </div>
+                <button
+                  id="btn-copy-sql-tab"
+                  onClick={handleCopySQL}
+                  className="text-xs text-sky-700 hover:text-sky-900 bg-sky-50 hover:bg-sky-100 px-3 py-1.5 rounded-lg border border-sky-200 flex items-center space-x-1.5 transition-colors cursor-pointer font-semibold"
+                >
+                  {copied ? <Check className="w-3.5 h-3.5 text-emerald-600" /> : <Copy className="w-3.5 h-3.5" />}
+                  <span>{copied ? 'Copied to Clipboard!' : 'Copy SQL Statement'}</span>
+                </button>
+              </div>
+
+              <div className="p-4 rounded-xl bg-slate-900 text-emerald-400 font-mono text-xs overflow-x-auto leading-relaxed border border-slate-800 shadow-inner">
+                <pre>{activeQuestion.sqlQuery}</pre>
               </div>
             </div>
           )}
