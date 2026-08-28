@@ -1,0 +1,106 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 780 400" width="100%" height="100%" style="background-color: #ffffff; font-family: 'Figtree', 'Plus Jakarta Sans', system-ui, sans-serif;">
+  <defs>
+    <linearGradient id="blueGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#007c9d" />
+      <stop offset="100%" stop-color="#0284c7" />
+    </linearGradient>
+    <linearGradient id="orangeGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#f58320" />
+      <stop offset="100%" stop-color="#ea580c" />
+    </linearGradient>
+    <linearGradient id="heroGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#002d39" />
+      <stop offset="100%" stop-color="#007c9d" />
+    </linearGradient>
+    <filter id="cardShadow" x="-5%" y="-5%" width="110%" height="115%" filterUnits="userSpaceOnUse">
+      <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#002d39" flood-opacity="0.06"/>
+    </filter>
+  </defs>
+
+  <!-- Canvas Background & Border -->
+  <rect width="780" height="400" fill="#ffffff" rx="8"/>
+  <rect x="0.5" y="0.5" width="779" height="399" fill="none" stroke="#d7e7eb" stroke-width="1" rx="8"/>
+
+  <!-- Chart Header -->
+  <g transform="translate(30, 32)">
+    <text x="0" y="0" font-size="16" font-weight="700" fill="#002d39">Q14: Multi-Factor Composite Bottleneck Score</text>
+    <text x="0" y="18" font-size="11" fill="#527983">Decomposition of clinical bottlenecks combining wait time, stay duration, readmissions, and bed capacity</text>
+  </g>
+
+  <!-- Chart Graphics Content -->
+  <g transform="translate(40, 80)">
+    <g transform="translate(160, 0)">
+      <rect x="0" y="0" width="10" height="10" fill="#e11d48"/>
+      <text x="14" y="9" font-size="9.5" fill="#002d39">Wait Time (25%)</text>
+      <rect x="115" y="0" width="10" height="10" fill="#f58320"/>
+      <text x="129" y="9" font-size="9.5" fill="#002d39">Length of Stay (25%)</text>
+      <rect x="250" y="0" width="10" height="10" fill="#007c9d"/>
+      <text x="264" y="9" font-size="9.5" fill="#002d39">Readmission (25%)</text>
+      <rect x="375" y="0" width="10" height="10" fill="#002d39"/>
+      <text x="389" y="9" font-size="9.5" fill="#002d39">Bed Occupancy (25%)</text>
+    </g>
+    
+        <g transform="translate(0, 25)">
+          <text x="175" y="16" font-size="10.5" font-weight="600" fill="#002d39" text-anchor="end">Apollo Bangalore Emergency</text>
+          <g transform="translate(190, 2)">
+            <rect x="0" y="0" width="107.80000000000001" height="20" fill="#e11d48"/>
+            <rect x="107.80000000000001" y="0" width="104.72000000000001" height="20" fill="#f58320"/>
+            <rect x="212.52000000000004" y="0" width="106.48" height="20" fill="#007c9d"/>
+            <rect x="319.00000000000006" y="0" width="101.2" height="20" fill="#002d39"/>
+          </g>
+          <text x="645" y="16" font-size="12" font-weight="800" fill="#e11d48">95.5</text>
+        </g>
+        
+        <g transform="translate(0, 69)">
+          <text x="175" y="16" font-size="10.5" font-weight="600" fill="#002d39" text-anchor="end">Apollo Mumbai Emergency</text>
+          <g transform="translate(190, 2)">
+            <rect x="0" y="0" width="104.72000000000001" height="20" fill="#e11d48"/>
+            <rect x="104.72000000000001" y="0" width="99.00000000000001" height="20" fill="#f58320"/>
+            <rect x="203.72000000000003" y="0" width="103.4" height="20" fill="#007c9d"/>
+            <rect x="307.12" y="0" width="100.32000000000001" height="20" fill="#002d39"/>
+          </g>
+          <text x="645" y="16" font-size="12" font-weight="800" fill="#e11d48">92.6</text>
+        </g>
+        
+        <g transform="translate(0, 113)">
+          <text x="175" y="16" font-size="10.5" font-weight="600" fill="#002d39" text-anchor="end">Apollo Delhi Emergency</text>
+          <g transform="translate(190, 2)">
+            <rect x="0" y="0" width="101.2" height="20" fill="#e11d48"/>
+            <rect x="101.2" y="0" width="95.92000000000002" height="20" fill="#f58320"/>
+            <rect x="197.12" y="0" width="100.76" height="20" fill="#007c9d"/>
+            <rect x="297.88" y="0" width="98.56" height="20" fill="#002d39"/>
+          </g>
+          <text x="645" y="16" font-size="12" font-weight="800" fill="#e11d48">90.1</text>
+        </g>
+        
+        <g transform="translate(0, 157)">
+          <text x="175" y="16" font-size="10.5" font-weight="600" fill="#002d39" text-anchor="end">Apollo Hyderabad Emergency</text>
+          <g transform="translate(190, 2)">
+            <rect x="0" y="0" width="99.00000000000001" height="20" fill="#e11d48"/>
+            <rect x="99.00000000000001" y="0" width="92.4" height="20" fill="#f58320"/>
+            <rect x="191.40000000000003" y="0" width="96.80000000000001" height="20" fill="#007c9d"/>
+            <rect x="288.20000000000005" y="0" width="97.68" height="20" fill="#002d39"/>
+          </g>
+          <text x="645" y="16" font-size="12" font-weight="800" fill="#e11d48">87.7</text>
+        </g>
+        
+        <g transform="translate(0, 201)">
+          <text x="175" y="16" font-size="10.5" font-weight="600" fill="#002d39" text-anchor="end">Apollo Delhi Cardiology</text>
+          <g transform="translate(190, 2)">
+            <rect x="0" y="0" width="52.800000000000004" height="20" fill="#e11d48"/>
+            <rect x="52.800000000000004" y="0" width="72.60000000000001" height="20" fill="#f58320"/>
+            <rect x="125.4" y="0" width="66.88" height="20" fill="#007c9d"/>
+            <rect x="192.28" y="0" width="77.0" height="20" fill="#002d39"/>
+          </g>
+          <text x="645" y="16" font-size="12" font-weight="800" fill="#007c9d">61.2</text>
+        </g>
+        </g>
+
+  <!-- Apollo Analytical Footer Watermark -->
+  <g transform="translate(30, 384)">
+    <line x1="0" y1="-10" x2="720" y2="-10" stroke="#d7e7eb" stroke-width="0.75" />
+    <text x="0" y="0" font-size="9" fill="#527983" font-style="italic">
+      Network-wide analytical snapshot | Dataset: 4 Hospitals, 2,500 Admissions, 7,300 Bed Logs | Apollo Portfolio Project
+    </text>
+  </g>
+</svg>

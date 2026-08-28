@@ -1,0 +1,114 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 780 400" width="100%" height="100%" style="background-color: #ffffff; font-family: 'Figtree', 'Plus Jakarta Sans', system-ui, sans-serif;">
+  <defs>
+    <linearGradient id="blueGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#007c9d" />
+      <stop offset="100%" stop-color="#0284c7" />
+    </linearGradient>
+    <linearGradient id="orangeGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#f58320" />
+      <stop offset="100%" stop-color="#ea580c" />
+    </linearGradient>
+    <linearGradient id="heroGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#002d39" />
+      <stop offset="100%" stop-color="#007c9d" />
+    </linearGradient>
+    <filter id="cardShadow" x="-5%" y="-5%" width="110%" height="115%" filterUnits="userSpaceOnUse">
+      <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#002d39" flood-opacity="0.06"/>
+    </filter>
+  </defs>
+
+  <!-- Canvas Background & Border -->
+  <rect width="780" height="400" fill="#ffffff" rx="8"/>
+  <rect x="0.5" y="0.5" width="779" height="399" fill="none" stroke="#d7e7eb" stroke-width="1" rx="8"/>
+
+  <!-- Chart Header -->
+  <g transform="translate(30, 32)">
+    <text x="0" y="0" font-size="16" font-weight="700" fill="#002d39">Q06: Length of Stay (LOS) Distributions</text>
+    <text x="0" y="18" font-size="11" fill="#527983">Box plot representation showing median, interquartile ranges, and variance by clinical department</text>
+  </g>
+
+  <!-- Chart Graphics Content -->
+  <g transform="translate(60, 80)">
+    <!-- Scale Axis -->
+    <line x1="180" y1="230" x2="660" y2="230" stroke="#d7e7eb" stroke-width="1"/>
+    <text x="180" y="246" font-size="10" fill="#527983" text-anchor="middle">0d</text>
+    <text x="276" y="246" font-size="10" fill="#527983" text-anchor="middle">2d</text>
+    <text x="372" y="246" font-size="10" fill="#527983" text-anchor="middle">4d</text>
+    <text x="468" y="246" font-size="10" fill="#527983" text-anchor="middle">6d</text>
+    <text x="564" y="246" font-size="10" fill="#527983" text-anchor="middle">8d</text>
+    <text x="660" y="246" font-size="10" fill="#527983" text-anchor="middle">10d</text>
+    
+        <g transform="translate(0, 10)">
+          <text x="165" y="16" font-size="11" font-weight="600" fill="#002d39" text-anchor="end">General Medicine</text>
+          <!-- Whiskers -->
+          <line x1="228.0" y1="12" x2="554.4" y2="12" stroke="#007c9d" stroke-width="1.5"/>
+          <line x1="228.0" y1="6" x2="228.0" y2="18" stroke="#007c9d" stroke-width="1.5"/>
+          <line x1="554.4" y1="6" x2="554.4" y2="18" stroke="#007c9d" stroke-width="1.5"/>
+          <!-- Box (Q1 to Q3) -->
+          <rect x="300.0" y="2" width="158.39999999999998" height="20" rx="3" fill="#def4fa" stroke="#007c9d" stroke-width="1.5"/>
+          <!-- Median -->
+          <line x1="381.6" y1="2" x2="381.6" y2="22" stroke="#007c9d" stroke-width="2.5"/>
+          <text x="381.6" y="-2" font-size="9.5" font-weight="700" fill="#007c9d" text-anchor="middle">4.2d</text>
+        </g>
+        
+        <g transform="translate(0, 54)">
+          <text x="165" y="16" font-size="11" font-weight="600" fill="#002d39" text-anchor="end">Orthopedics</text>
+          <!-- Whiskers -->
+          <line x1="276.0" y1="12" x2="564.0" y2="12" stroke="#f58320" stroke-width="1.5"/>
+          <line x1="276.0" y1="6" x2="276.0" y2="18" stroke="#f58320" stroke-width="1.5"/>
+          <line x1="564.0" y1="6" x2="564.0" y2="18" stroke="#f58320" stroke-width="1.5"/>
+          <!-- Box (Q1 to Q3) -->
+          <rect x="333.6" y="2" width="158.39999999999998" height="20" rx="3" fill="#def4fa" stroke="#f58320" stroke-width="1.5"/>
+          <!-- Median -->
+          <line x1="424.79999999999995" y1="2" x2="424.79999999999995" y2="22" stroke="#f58320" stroke-width="2.5"/>
+          <text x="424.79999999999995" y="-2" font-size="9.5" font-weight="700" fill="#f58320" text-anchor="middle">5.1d</text>
+        </g>
+        
+        <g transform="translate(0, 98)">
+          <text x="165" y="16" font-size="11" font-weight="600" fill="#002d39" text-anchor="end">Cardiology</text>
+          <!-- Whiskers -->
+          <line x1="252.0" y1="12" x2="540.0" y2="12" stroke="#007c9d" stroke-width="1.5"/>
+          <line x1="252.0" y1="6" x2="252.0" y2="18" stroke="#007c9d" stroke-width="1.5"/>
+          <line x1="540.0" y1="6" x2="540.0" y2="18" stroke="#007c9d" stroke-width="1.5"/>
+          <!-- Box (Q1 to Q3) -->
+          <rect x="324.0" y="2" width="144.0" height="20" rx="3" fill="#def4fa" stroke="#007c9d" stroke-width="1.5"/>
+          <!-- Median -->
+          <line x1="400.79999999999995" y1="2" x2="400.79999999999995" y2="22" stroke="#007c9d" stroke-width="2.5"/>
+          <text x="400.79999999999995" y="-2" font-size="9.5" font-weight="700" fill="#007c9d" text-anchor="middle">4.6d</text>
+        </g>
+        
+        <g transform="translate(0, 142)">
+          <text x="165" y="16" font-size="11" font-weight="600" fill="#002d39" text-anchor="end">Neurology</text>
+          <!-- Whiskers -->
+          <line x1="276.0" y1="12" x2="564.0" y2="12" stroke="#002d39" stroke-width="1.5"/>
+          <line x1="276.0" y1="6" x2="276.0" y2="18" stroke="#002d39" stroke-width="1.5"/>
+          <line x1="564.0" y1="6" x2="564.0" y2="18" stroke="#002d39" stroke-width="1.5"/>
+          <!-- Box (Q1 to Q3) -->
+          <rect x="362.4" y="2" width="144.0" height="20" rx="3" fill="#def4fa" stroke="#002d39" stroke-width="1.5"/>
+          <!-- Median -->
+          <line x1="439.20000000000005" y1="2" x2="439.20000000000005" y2="22" stroke="#002d39" stroke-width="2.5"/>
+          <text x="439.20000000000005" y="-2" font-size="9.5" font-weight="700" fill="#002d39" text-anchor="middle">5.4d</text>
+        </g>
+        
+        <g transform="translate(0, 186)">
+          <text x="165" y="16" font-size="11" font-weight="600" fill="#002d39" text-anchor="end">Emergency (Obs)</text>
+          <!-- Whiskers -->
+          <line x1="204.0" y1="12" x2="372.0" y2="12" stroke="#10b981" stroke-width="1.5"/>
+          <line x1="204.0" y1="6" x2="204.0" y2="18" stroke="#10b981" stroke-width="1.5"/>
+          <line x1="372.0" y1="6" x2="372.0" y2="18" stroke="#10b981" stroke-width="1.5"/>
+          <!-- Box (Q1 to Q3) -->
+          <rect x="228.0" y="2" width="86.39999999999998" height="20" rx="3" fill="#def4fa" stroke="#10b981" stroke-width="1.5"/>
+          <!-- Median -->
+          <line x1="266.4" y1="2" x2="266.4" y2="22" stroke="#10b981" stroke-width="2.5"/>
+          <text x="266.4" y="-2" font-size="9.5" font-weight="700" fill="#10b981" text-anchor="middle">1.8d</text>
+        </g>
+        </g>
+
+  <!-- Apollo Analytical Footer Watermark -->
+  <g transform="translate(30, 384)">
+    <line x1="0" y1="-10" x2="720" y2="-10" stroke="#d7e7eb" stroke-width="0.75" />
+    <text x="0" y="0" font-size="9" fill="#527983" font-style="italic">
+      Network-wide analytical snapshot | Dataset: 4 Hospitals, 2,500 Admissions, 7,300 Bed Logs | Apollo Portfolio Project
+    </text>
+  </g>
+</svg>

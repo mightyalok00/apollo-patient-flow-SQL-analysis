@@ -67,7 +67,16 @@ export interface SqlQueryQuestion {
   optimizedQuery?: string;
   explanation: string;
   keyFinding?: string;
+  supportingEvidence?: string;
+  operationalRecommendation?: string;
   sqlConcepts: string[];
+  pandasCode?: string;
+  pandasTechniques?: string[];
+  dataScope?: string;
+  datasetPeriod?: string;
+  chartSvgPath?: string;
+  chartPngPath?: string;
+  accessibleDescription?: string;
 }
 
 export interface QueryExecutionResult {
@@ -90,6 +99,10 @@ export interface DepartmentBottleneck {
   bottleneck_score: number;
   rank: number;
   status: 'Critical' | 'High Risk' | 'Moderate' | 'Normal';
+  wait_contribution?: number;
+  los_contribution?: number;
+  readmission_contribution?: number;
+  bed_util_contribution?: number;
 }
 
 export interface BusinessFinding {

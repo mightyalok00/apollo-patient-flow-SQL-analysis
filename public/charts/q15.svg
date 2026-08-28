@@ -1,0 +1,97 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 780 400" width="100%" height="100%" style="background-color: #ffffff; font-family: 'Figtree', 'Plus Jakarta Sans', system-ui, sans-serif;">
+  <defs>
+    <linearGradient id="blueGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#007c9d" />
+      <stop offset="100%" stop-color="#0284c7" />
+    </linearGradient>
+    <linearGradient id="orangeGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#f58320" />
+      <stop offset="100%" stop-color="#ea580c" />
+    </linearGradient>
+    <linearGradient id="heroGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#002d39" />
+      <stop offset="100%" stop-color="#007c9d" />
+    </linearGradient>
+    <filter id="cardShadow" x="-5%" y="-5%" width="110%" height="115%" filterUnits="userSpaceOnUse">
+      <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#002d39" flood-opacity="0.06"/>
+    </filter>
+  </defs>
+
+  <!-- Canvas Background & Border -->
+  <rect width="780" height="400" fill="#ffffff" rx="8"/>
+  <rect x="0.5" y="0.5" width="779" height="399" fill="none" stroke="#d7e7eb" stroke-width="1" rx="8"/>
+
+  <!-- Chart Header -->
+  <g transform="translate(30, 32)">
+    <text x="0" y="0" font-size="16" font-weight="700" fill="#002d39">Q15: SQL Execution Latency Optimization Benchmark</text>
+    <text x="0" y="18" font-size="11" fill="#527983">Dumbbell chart comparing execution times between unindexed subqueries and optimized CTE architectures</text>
+  </g>
+
+  <!-- Chart Graphics Content -->
+  <g transform="translate(40, 80)">
+    <g transform="translate(180, 0)">
+      <circle cx="6" cy="6" r="5" fill="#f58320"/>
+      <text x="16" y="10" font-size="10" fill="#002d39">Legacy / Unindexed Subquery</text>
+      <circle cx="190" cy="6" r="5" fill="#10b981"/>
+      <text x="200" y="10" font-size="10" fill="#002d39">Optimized CTE &amp; Composite Index</text>
+    </g>
+    
+        <g transform="translate(0, 30)">
+          <text x="195" y="14" font-size="10.5" font-weight="600" fill="#002d39" text-anchor="end">Patient Multi-Metric Ranking</text>
+          <line x1="313" y1="10" x2="453" y2="10" stroke="#d7e7eb" stroke-width="3" stroke-linecap="round"/>
+          <circle cx="313" cy="10" r="7" fill="#10b981"/>
+          <text x="313" y="28" font-size="9" font-weight="700" fill="#10b981" text-anchor="middle">18.2ms</text>
+          <circle cx="453" cy="10" r="7" fill="#f58320"/>
+          <text x="453" y="28" font-size="9" font-weight="700" fill="#f58320" text-anchor="middle">42.8ms</text>
+          <text x="635" y="14" font-size="10.5" font-weight="800" fill="#10b981">-57.5%</text>
+        </g>
+        
+        <g transform="translate(0, 74)">
+          <text x="195" y="14" font-size="10.5" font-weight="600" fill="#002d39" text-anchor="end">Department Wait Aggregation</text>
+          <line x1="280" y1="10" x2="372" y2="10" stroke="#d7e7eb" stroke-width="3" stroke-linecap="round"/>
+          <circle cx="280" cy="10" r="7" fill="#10b981"/>
+          <text x="280" y="28" font-size="9" font-weight="700" fill="#10b981" text-anchor="middle">12.4ms</text>
+          <circle cx="372" cy="10" r="7" fill="#f58320"/>
+          <text x="372" y="28" font-size="9" font-weight="700" fill="#f58320" text-anchor="middle">28.5ms</text>
+          <text x="635" y="14" font-size="10.5" font-weight="800" fill="#10b981">-56.5%</text>
+        </g>
+        
+        <g transform="translate(0, 118)">
+          <text x="195" y="14" font-size="10.5" font-weight="600" fill="#002d39" text-anchor="end">Bed Utilization Time-Series</text>
+          <line x1="362" y1="10" x2="581" y2="10" stroke="#d7e7eb" stroke-width="3" stroke-linecap="round"/>
+          <circle cx="362" cy="10" r="7" fill="#10b981"/>
+          <text x="362" y="28" font-size="9" font-weight="700" fill="#10b981" text-anchor="middle">26.8ms</text>
+          <circle cx="581" cy="10" r="7" fill="#f58320"/>
+          <text x="581" y="28" font-size="9" font-weight="700" fill="#f58320" text-anchor="middle">65.2ms</text>
+          <text x="635" y="14" font-size="10.5" font-weight="800" fill="#10b981">-58.9%</text>
+        </g>
+        
+        <g transform="translate(0, 162)">
+          <text x="195" y="14" font-size="10.5" font-weight="600" fill="#002d39" text-anchor="end">30-Day Readmission Analysis</text>
+          <line x1="296" y1="10" x2="417" y2="10" stroke="#d7e7eb" stroke-width="3" stroke-linecap="round"/>
+          <circle cx="296" cy="10" r="7" fill="#10b981"/>
+          <text x="296" y="28" font-size="9" font-weight="700" fill="#10b981" text-anchor="middle">15.1ms</text>
+          <circle cx="417" cy="10" r="7" fill="#f58320"/>
+          <text x="417" y="28" font-size="9" font-weight="700" fill="#f58320" text-anchor="middle">36.4ms</text>
+          <text x="635" y="14" font-size="10.5" font-weight="800" fill="#10b981">-58.5%</text>
+        </g>
+        
+        <g transform="translate(0, 206)">
+          <text x="195" y="14" font-size="10.5" font-weight="600" fill="#002d39" text-anchor="end">Hospital Volume Rollup</text>
+          <line x1="258" y1="10" x2="312" y2="10" stroke="#d7e7eb" stroke-width="3" stroke-linecap="round"/>
+          <circle cx="258" cy="10" r="7" fill="#10b981"/>
+          <text x="258" y="28" font-size="9" font-weight="700" fill="#10b981" text-anchor="middle">8.5ms</text>
+          <circle cx="312" cy="10" r="7" fill="#f58320"/>
+          <text x="312" y="28" font-size="9" font-weight="700" fill="#f58320" text-anchor="middle">18.0ms</text>
+          <text x="635" y="14" font-size="10.5" font-weight="800" fill="#10b981">-52.8%</text>
+        </g>
+        </g>
+
+  <!-- Apollo Analytical Footer Watermark -->
+  <g transform="translate(30, 384)">
+    <line x1="0" y1="-10" x2="720" y2="-10" stroke="#d7e7eb" stroke-width="0.75" />
+    <text x="0" y="0" font-size="9" fill="#527983" font-style="italic">
+      Network-wide analytical snapshot | Dataset: 4 Hospitals, 2,500 Admissions, 7,300 Bed Logs | Apollo Portfolio Project
+    </text>
+  </g>
+</svg>

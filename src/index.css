@@ -2,15 +2,32 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  --apollo-ink: #002d39;
+  --apollo-blue: #007c9d;
+  --apollo-blue-soft: #def4fa;
+  --apollo-orange: #f58320;
+  --apollo-yellow: #fcd34d;
+  --apollo-cream: #fff8e6;
+  --apollo-sky-soft: #e7f2ff;
+  --apollo-green-soft: #e3f8ec;
+  --apollo-surface: #ffffff;
+  --apollo-page: #f7fbfc;
+  --apollo-border: #d7e7eb;
+}
+
 @layer base {
   html {
     -webkit-text-size-adjust: 100%;
     -webkit-tap-highlight-color: transparent;
+    color: var(--apollo-ink);
   }
 
   body {
-    font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+    font-family: 'Figtree', 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
     overscroll-behavior-y: none;
+    background-color: var(--apollo-page);
+    color: var(--apollo-ink);
   }
   
   code, pre, .font-mono {

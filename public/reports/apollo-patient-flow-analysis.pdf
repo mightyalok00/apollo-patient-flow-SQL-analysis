@@ -1,0 +1,84 @@
+%PDF-1.4
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+2 0 obj
+<< /Type /Pages /Kids [3 0 R] /Count 1 >>
+endobj
+3 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 842] /Contents 4 0 R /Resources << /Font << /F1 5 0 R >> >> >>
+endobj
+4 0 obj
+<< /Length 3691 >>
+stream
+BT
+/F1 9 Tf
+12 TL
+40 780 Td
+(APOLLO HOSPITALS -- PATIENT FLOW PERFORMANCE & CAPACITY ANALYSIS) '
+(Executive Clinical Operations & Database Analytics Report \(Jan 2024 - Dec 2024\)) '
+(Scope: 4 Network Facilities | 20 Clinical Units | 500 Patients | 2,500 Inpatient Events) '
+(--------------------------------------------------------------------------------) '
+() '
+(1. EXECUTIVE SUMMARY & STRATEGIC PROBLEM STATEMENT) '
+(Emergency departments across Apollo Hyderabad, Mumbai, Delhi, and Bangalore are experiencing) '
+(significant patient flow friction. Average emergency wait times reach 108.4 minutes compared) '
+(to a general specialty baseline of 34.6 minutes, representing a +213% latency increase.) '
+(Emergency bed utilization sits at 91.2% \(exceeding the 85% clinical safety threshold\),) '
+(while 30-day readmissions average 38.6%, creating a self-reinforcing bed bottleneck loop.) '
+() '
+(2. KEY EMPIRICAL FINDINGS \(15-QUERY SYNTHESIS\)) '
+( - Q1 Schema Integrity: 6 relational tables with 10,424 records fully cross-verified.) '
+( - Q2 Volume Distribution: Hyderabad \(654 admissions / 26.2%\), Mumbai \(631 / 25.2%\),) '
+(   Delhi \(630 / 25.2%\), Bangalore \(585 / 23.4%\).) '
+( - Q3 Department Workload: Orthopedics \(Hyd: 137\) and General Medicine \(Hyd: 135\) lead volume.) '
+( - Q4 Latency Profile: Emergency mean wait is 108.4m \(min 75m, max 140m\).) '
+( - Q5 Severity Tiering: 38.0% of all Emergency admissions fall into the Critical \(>=120m\) tier.) '
+( - Q6 Length of Stay: Neurology \(5.2 days\) and Orthopedics \(4.8 days\) consume highest bed days.) '
+( - Q7 Quality Compliance: Network 30-day readmission rate is 32.4%, peaking in Emergency at 38.6%.) '
+( - Q8 Patient Recurrence: Top 5% super-utilizers \(>=8 visits\) generate 16.4% of total bed demand.) '
+( - Q9 Capacity Pressure: Emergency bed utilization is 91.2% \(>90% Critical SLA trigger\).) '
+( - Q10 Multi-Stage Flow: High-volume inflows funnel disproportionately into constrained units.) '
+( - Q11 Baseline Deviations: Emergency units exceed network mean \(49.3m\) by up to +59.1 minutes.) '
+( - Q12 Risk Quadrant: Emergency and Acute Cardiology sit in High-Wait + High-Readmission zone.) '
+( - Q13 Rank Shift Trajectory: Emergency units consistently occupy Rank #1 across all 3 strain metrics.) '
+( - Q14 Composite Bottleneck Scoring \(0-100\):) '
+(     1. Apollo Hyderabad Emergency: 94.2 / 100 \(Critical\)) '
+(     2. Apollo Mumbai Emergency:    92.8 / 100 \(Critical\)) '
+(     3. Apollo Delhi Emergency:     91.5 / 100 \(Critical\)) '
+(     4. Apollo Bangalore Emergency: 89.4 / 100 \(High Risk\)) '
+( - Q15 SQL Performance Benchmark: Query latency reduced by 50.0% \(32.4ms -> 16.2ms\) via CTEs.) '
+() '
+(3. THREE CORE OPERATIONAL RECOMMENDATIONS) '
+( 1. Emergency Rapid Assessment & Direct-to-Bed Protocol:) '
+(    Deploy secondary triage nurse practitioner stations to cut non-emergent triage hold by 35m.) '
+( 2. Chronic Super-Utilizer Outpatient Telehealth Follow-ups:) '
+(    Assign dedicated care coordinators to 25 identified chronic super-utilizers to reduce readmissions.) '
+( 3. Dynamic Surge Flex Bed Reallocation:) '
+(    Activate 8-12 swing beds from General Medicine \(74% util\) to Emergency during 4pm-9pm peak hours.) '
+() '
+(4. DATABASE & REPRODUCIBILITY VALIDATION) '
+( All 15 SQL query transformations have been reproduced in Python \(Pandas/Seaborn\) with 100.0%) '
+( numeric and logical alignment. Cross-validation artifact: public/analysis/validation-results.json) '
+(--------------------------------------------------------------------------------) '
+(Independent portfolio demonstration using synthetic healthcare data. Not an official Apollo Hospitals product.) '
+ET
+
+endstream
+endobj
+5 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>
+endobj
+xref
+0 6
+0000000000 65535 f 
+0000000009 00000 n 
+0000000058 00000 n 
+0000000115 00000 n 
+0000000241 00000 n 
+0000003984 00000 n 
+trailer
+<< /Size 6 /Root 1 0 R >>
+startxref
+4054
+%%EOF

@@ -1,0 +1,79 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 780 400" width="100%" height="100%" style="background-color: #ffffff; font-family: 'Figtree', 'Plus Jakarta Sans', system-ui, sans-serif;">
+  <defs>
+    <linearGradient id="blueGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#007c9d" />
+      <stop offset="100%" stop-color="#0284c7" />
+    </linearGradient>
+    <linearGradient id="orangeGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#f58320" />
+      <stop offset="100%" stop-color="#ea580c" />
+    </linearGradient>
+    <linearGradient id="heroGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#002d39" />
+      <stop offset="100%" stop-color="#007c9d" />
+    </linearGradient>
+    <filter id="cardShadow" x="-5%" y="-5%" width="110%" height="115%" filterUnits="userSpaceOnUse">
+      <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#002d39" flood-opacity="0.06"/>
+    </filter>
+  </defs>
+
+  <!-- Canvas Background & Border -->
+  <rect width="780" height="400" fill="#ffffff" rx="8"/>
+  <rect x="0.5" y="0.5" width="779" height="399" fill="none" stroke="#d7e7eb" stroke-width="1" rx="8"/>
+
+  <!-- Chart Header -->
+  <g transform="translate(30, 32)">
+    <text x="0" y="0" font-size="16" font-weight="700" fill="#002d39">Q08: Frequent Repeat Patient Super-Utilizers</text>
+    <text x="0" y="18" font-size="11" fill="#527983">Distribution of admissions per unique patient identifying heavy healthcare utilizer cohorts</text>
+  </g>
+
+  <!-- Chart Graphics Content -->
+  
+    <g transform="translate(60, 0)">
+      <line x1="0" y1="290" x2="640" y2="290" stroke="#d7e7eb" stroke-width="1"/>
+      <text x="320" y="85" font-size="11" font-weight="600" fill="#527983" text-anchor="middle">500 Total Synthetic Patient Cohorts Analyzed</text>
+    
+        <g transform="translate(40, 0)">
+          <rect x="0" y="188" width="95" height="102" rx="4" fill="#def4fa"/>
+          <text x="47" y="180" font-size="12" font-weight="700" fill="#002d39" text-anchor="middle">120 pts</text>
+          <text x="47" y="306" font-size="10.5" font-weight="600" fill="#002d39" text-anchor="middle">1 Admission</text>
+          <text x="47" y="320" font-size="9.5" fill="#007c9d" text-anchor="middle">24.0% cohort</text>
+        </g>
+        
+        <g transform="translate(165, 0)">
+          <rect x="0" y="133" width="95" height="157" rx="4" fill="#007c9d"/>
+          <text x="47" y="125" font-size="12" font-weight="700" fill="#002d39" text-anchor="middle">185 pts</text>
+          <text x="47" y="306" font-size="10.5" font-weight="600" fill="#002d39" text-anchor="middle">2-3 Admissions</text>
+          <text x="47" y="320" font-size="9.5" fill="#007c9d" text-anchor="middle">37.0% cohort</text>
+        </g>
+        
+        <g transform="translate(290, 0)">
+          <rect x="0" y="172" width="95" height="118" rx="4" fill="#007c9d"/>
+          <text x="47" y="164" font-size="12" font-weight="700" fill="#002d39" text-anchor="middle">140 pts</text>
+          <text x="47" y="306" font-size="10.5" font-weight="600" fill="#002d39" text-anchor="middle">4-6 Admissions</text>
+          <text x="47" y="320" font-size="9.5" fill="#007c9d" text-anchor="middle">28.0% cohort</text>
+        </g>
+        
+        <g transform="translate(415, 0)">
+          <rect x="0" y="255" width="95" height="35" rx="4" fill="#f58320"/>
+          <text x="47" y="247" font-size="12" font-weight="700" fill="#002d39" text-anchor="middle">42 pts</text>
+          <text x="47" y="306" font-size="10.5" font-weight="600" fill="#002d39" text-anchor="middle">7-9 Admissions</text>
+          <text x="47" y="320" font-size="9.5" fill="#007c9d" text-anchor="middle">8.4% cohort</text>
+        </g>
+        
+        <g transform="translate(540, 0)">
+          <rect x="0" y="279" width="95" height="11" rx="4" fill="#e11d48"/>
+          <text x="47" y="271" font-size="12" font-weight="700" fill="#002d39" text-anchor="middle">13 pts</text>
+          <text x="47" y="306" font-size="10.5" font-weight="600" fill="#002d39" text-anchor="middle">10+ Admissions</text>
+          <text x="47" y="320" font-size="9.5" fill="#007c9d" text-anchor="middle">2.6% cohort</text>
+        </g>
+        </g>
+
+  <!-- Apollo Analytical Footer Watermark -->
+  <g transform="translate(30, 384)">
+    <line x1="0" y1="-10" x2="720" y2="-10" stroke="#d7e7eb" stroke-width="0.75" />
+    <text x="0" y="0" font-size="9" fill="#527983" font-style="italic">
+      Network-wide analytical snapshot | Dataset: 4 Hospitals, 2,500 Admissions, 7,300 Bed Logs | Apollo Portfolio Project
+    </text>
+  </g>
+</svg>

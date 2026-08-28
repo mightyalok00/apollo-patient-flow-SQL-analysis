@@ -1,17 +1,20 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { 
-  AlertTriangle, 
   Flame, 
+  AlertTriangle, 
   Clock, 
-  Activity, 
+  Bed, 
   ArrowUpRight, 
-  ShieldAlert, 
-  CheckCircle,
-  HelpCircle,
-  Stethoscope,
+  Filter, 
+  Activity, 
+  ShieldAlert,
   Building2,
-  TrendingUp,
-  FileSpreadsheet
+  CheckCircle2,
+  Info,
+  Layers,
+  Sparkles,
+  ChevronDown,
+  ChevronUp
 } from 'lucide-react';
 import { 
   ScatterChart, 
@@ -24,7 +27,11 @@ import {
   ResponsiveContainer, 
   Cell 
 } from 'recharts';
-import { DEPARTMENT_BOTTLENECKS, WAIT_TIME_CLASSIFICATION } from '../data/hospitalData';
+import { 
+  DEPARTMENT_BOTTLENECKS, 
+  BOTTLENECK_WEIGHTS, 
+  WAIT_TIME_CLASSIFICATION 
+} from '../data/hospitalData';
 
 interface BottleneckAnalysisProps {
   onSelectQuery: (questionNumber: number) => void;
@@ -33,72 +40,147 @@ interface BottleneckAnalysisProps {
 export const BottleneckAnalysis: React.FC<BottleneckAnalysisProps> = ({ onSelectQuery }) => {
   const [filterHospital, setFilterHospital] = useState<string>('All');
   const [filterStatus, setFilterStatus] = useState<string>('All');
+  const [selectedDeptDetail, setSelectedDeptDetail] = useState<string | null>('Apollo Delhi-Emergency');
 
-  const filteredBottlenecks = DEPARTMENT_BOTTLENECKS.filter(item => {
-    const matchHosp = filterHospital === 'All' || item.hospital_name === filterHospital;
-    const matchStat = filterStatus === 'All' || item.status === filterStatus;
-    return matchHosp && matchStat;
-  });
+  const filteredBottlenecks = useMemo(() => {
+    return DEPARTMENT_BOTTLENECKS.filter((item) => {
+      if (filterHospital !== 'All' && item.hospital_name !== filterHospital) return false;
+      if (filterStatus !== 'All' && item.status !== filterStatus) return false;
+      return true;
+    });
+  }, [filterHospital, filterStatus]);
 
-  // Prepare scatter data for LOS vs Readmission Rate
-  const scatterData = DEPARTMENT_BOTTLENECKS.map(item => ({
-    name: `${item.hospital_name} ${item.department_name}`,
-    los: item.avg_los_days,
-    readmission: item.readmission_rate_pct,
-    wait: item.avg_wait_minutes,
-    score: item.bottleneck_score,
-    status: item.status,
+  // Scatter chart data
+  const scatterData = DEPARTMENT_BOTTLENECKS.map((d) => ({
+    name: `${d.hospital_name} - ${d.department_name}`,
+    los: d.avg_los_days,
+    readmission: d.readmission_rate_pct,
+    wait: d.avg_wait_minutes,
+    score: d.bottleneck_score,
+    status: d.status
   }));
+
+  const activeDetailItem = useMemo(() => {
+    if (!selectedDeptDetail) return DEPARTMENT_BOTTLENECKS[0];
+    return DEPARTMENT_BOTTLENECKS.find(
+      d => `${d.hospital_name}-${d.department_name}` === selectedDeptDetail
+    ) || DEPARTMENT_BOTTLENECKS[0];
+  }, [selectedDeptDetail]);
 
   return (
     <div className="space-y-8 pb-12">
-      {/* Top Banner: Composite Bottleneck Methodology */}
+      {/* Header Banner */}
       <div className="bg-gradient-to-r from-rose-950 via-slate-900 to-amber-950 text-white rounded-2xl p-6 sm:p-8 shadow-md relative overflow-hidden">
-        <div className="absolute right-0 top-0 bottom-0 opacity-10 pointer-events-none flex items-center pr-8">
-          <Flame className="w-80 h-80 text-rose-500" />
-        </div>
-
-        <div className="relative z-10">
-          <div className="flex items-center space-x-2 text-xs font-bold uppercase tracking-wider text-rose-300 mb-2">
-            <ShieldAlert className="w-4 h-4 text-rose-400" />
-            <span>Question 14: Multi-Factor Bottleneck Scoring Engine</span>
+        <div className="relative z-10 max-w-3xl">
+          <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-rose-500/20 border border-rose-400/30 text-rose-300 text-xs font-semibold mb-3">
+            <Flame className="w-3.5 h-3.5 text-rose-400 animate-pulse" />
+            <span>Question 14: Multi-Criteria Clinical Strain Evaluation</span>
           </div>
-          <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-white mb-2">
-            Hospital Patient Flow Bottleneck Rankings
+          <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight mb-2">
+            Composite Department Bottleneck Matrix
           </h1>
-          <p className="text-slate-300 text-xs sm:text-sm leading-relaxed max-w-3xl mb-5">
-            Statistical percentiles calculated via <code className="font-mono bg-slate-800 px-1.5 py-0.5 rounded text-rose-300 font-bold">PERCENT_RANK()</code> across four operational dimensions: 
-            <strong> Triage Wait Time (35%)</strong>, <strong> Length of Stay (25%)</strong>, <strong> Readmission Rate (25%)</strong>, and <strong> Bed Utilization (15%)</strong>.
+          <p className="text-slate-300 text-xs sm:text-sm leading-relaxed mb-4">
+            Advanced SQL Window Ranking algorithm assigning weighted percentile scores across 4 key operational dimensions (Wait Latency 25%, Length of Stay 25%, 30-Day Readmission 25%, and Bed Utilization 25%) across all 20 hospital departments.
           </p>
 
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
-            <div className="bg-slate-900/80 p-3 rounded-xl border border-rose-900/50 backdrop-blur-xs">
-              <span className="text-slate-400 block text-[11px]">#1 Critical Bottleneck:</span>
-              <span className="font-bold text-rose-400 text-sm">Apollo Delhi Emergency (Score: 92.11)</span>
+          <button
+            onClick={() => onSelectQuery(14)}
+            aria-label="Inspect SQL Implementation of Query 14"
+            className="inline-flex items-center space-x-2 bg-rose-600 hover:bg-rose-500 text-white font-bold px-4 py-2 rounded-xl text-xs transition-all shadow-sm cursor-pointer focus-visible:ring-2 focus-visible:ring-rose-400 focus:outline-hidden"
+          >
+            <span>Inspect SQL CTE & Window Ranking (Q14)</span>
+            <ArrowUpRight className="w-4 h-4" />
+          </button>
+        </div>
+      </div>
+
+      {/* ========================================================================= */}
+      {/* 4-DIMENSIONAL METRIC WEIGHTING & NORMALIZATION BREAKDOWN PANEL              */}
+      {/* ========================================================================= */}
+      <div className="bg-white p-5 sm:p-6 rounded-2xl border border-slate-200 shadow-xs space-y-4">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-3 border-b border-slate-100">
+          <div>
+            <h2 className="text-base font-extrabold text-slate-900 flex items-center space-x-2">
+              <Layers className="w-4 h-4 text-sky-600" />
+              <span>Q14 Composite Score Formula & Dimension Weights</span>
+            </h2>
+            <p className="text-xs text-slate-500 mt-0.5">
+              Each metric contributes up to 25.0 points based on normalized percentile rankings across all 20 departments.
+            </p>
+          </div>
+          <div className="text-xs font-mono px-3 py-1 rounded-lg bg-slate-900 text-sky-300 font-bold">
+            Total Score = Σ(Weight × Metric Rank) / 100
+          </div>
+        </div>
+
+        {/* 4 Weight Cards */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+          <div className="p-3.5 rounded-xl border border-rose-200 bg-rose-50/60">
+            <div className="flex items-center justify-between text-xs font-extrabold text-rose-900 mb-1">
+              <span className="flex items-center space-x-1.5">
+                <Clock className="w-3.5 h-3.5 text-rose-600" />
+                <span>Triage Wait Latency</span>
+              </span>
+              <span className="px-2 py-0.5 rounded-md bg-rose-200 text-rose-800 font-mono font-black">25%</span>
             </div>
-            <div className="bg-slate-900/80 p-3 rounded-xl border border-amber-900/50 backdrop-blur-xs">
-              <span className="text-slate-400 block text-[11px]">Peak Latency Ward:</span>
-              <span className="font-bold text-amber-400 text-sm">Apollo Bangalore Emergency (106.7 min)</span>
+            <div className="text-[11px] text-rose-800 leading-relaxed">
+              Percentile rank of average triage wait minutes. Max 25.0 pts. High in Emergency (avg &gt;100 min).
             </div>
-            <div className="bg-slate-900/80 p-3 rounded-xl border border-orange-900/50 backdrop-blur-xs">
-              <span className="text-slate-400 block text-[11px]">Highest Readmission:</span>
-              <span className="font-bold text-orange-400 text-sm">Apollo Delhi Orthopedics (40.77%)</span>
+          </div>
+
+          <div className="p-3.5 rounded-xl border border-indigo-200 bg-indigo-50/60">
+            <div className="flex items-center justify-between text-xs font-extrabold text-indigo-900 mb-1">
+              <span className="flex items-center space-x-1.5">
+                <Bed className="w-3.5 h-3.5 text-indigo-600" />
+                <span>Length of Stay (LOS)</span>
+              </span>
+              <span className="px-2 py-0.5 rounded-md bg-indigo-200 text-indigo-800 font-mono font-black">25%</span>
+            </div>
+            <div className="text-[11px] text-indigo-800 leading-relaxed">
+              Percentile rank of mean inpatient duration in days. Max 25.0 pts. Reflects discharge delays.
+            </div>
+          </div>
+
+          <div className="p-3.5 rounded-xl border border-amber-200 bg-amber-50/60">
+            <div className="flex items-center justify-between text-xs font-extrabold text-amber-900 mb-1">
+              <span className="flex items-center space-x-1.5">
+                <AlertTriangle className="w-3.5 h-3.5 text-amber-600" />
+                <span>30-Day Readmissions</span>
+              </span>
+              <span className="px-2 py-0.5 rounded-md bg-amber-200 text-amber-800 font-mono font-black">25%</span>
+            </div>
+            <div className="text-[11px] text-amber-800 leading-relaxed">
+              Percentile rank of 30-day bouncebacks. Max 25.0 pts. Peaks in Orthopedics (40.77%) & Cardiology.
+            </div>
+          </div>
+
+          <div className="p-3.5 rounded-xl border border-emerald-200 bg-emerald-50/60">
+            <div className="flex items-center justify-between text-xs font-extrabold text-emerald-900 mb-1">
+              <span className="flex items-center space-x-1.5">
+                <Building2 className="w-3.5 h-3.5 text-emerald-600" />
+                <span>Bed Capacity Strain</span>
+              </span>
+              <span className="px-2 py-0.5 rounded-md bg-emerald-200 text-emerald-800 font-mono font-black">25%</span>
+            </div>
+            <div className="text-[11px] text-emerald-800 leading-relaxed">
+              Percentile rank of active ward bed occupancy. Max 25.0 pts. Evaluates inpatient bed shortages.
             </div>
           </div>
         </div>
       </div>
 
-      {/* Emergency Department Crisis Alert Card */}
-      <div className="bg-rose-50/80 border-l-4 border-rose-600 rounded-2xl p-5 shadow-xs">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-3">
-          <div className="flex items-center space-x-2 text-rose-950 font-bold">
+      {/* Critical Emergency Department Strain Highlight */}
+      <div className="bg-rose-50 border border-rose-200 p-5 rounded-2xl shadow-xs">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-3">
+          <div className="flex items-center space-x-2">
             <Flame className="w-5 h-5 text-rose-600" />
-            <h2 className="text-base font-extrabold">Emergency Departments Account for All Top 4 Critical Bottlenecks</h2>
+            <h2 className="text-sm font-extrabold text-rose-900">
+              Systemic Alert: All 4 Emergency Departments Dominate Top 4 Bottleneck Ranks
+            </h2>
           </div>
           <button
-            id="btn-inspect-q14-direct"
             onClick={() => onSelectQuery(14)}
-            className="text-xs font-bold text-rose-900 hover:text-white bg-rose-200 hover:bg-rose-600 px-3.5 py-1.5 rounded-lg flex items-center space-x-1 transition-all shadow-2xs cursor-pointer"
+            className="text-xs font-bold text-rose-900 hover:text-white bg-rose-200 hover:bg-rose-600 px-3.5 py-1.5 rounded-lg flex items-center space-x-1 transition-all cursor-pointer"
           >
             <span>Inspect SQL Query (Q14)</span>
             <ArrowUpRight className="w-3.5 h-3.5" />
@@ -110,7 +192,15 @@ export const BottleneckAnalysis: React.FC<BottleneckAnalysisProps> = ({ onSelect
 
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
           {DEPARTMENT_BOTTLENECKS.filter(d => d.department_name === 'Emergency').map((em) => (
-            <div key={em.hospital_name} className="bg-white p-3.5 rounded-xl border border-rose-200 shadow-xs">
+            <div 
+              key={em.hospital_name} 
+              onClick={() => setSelectedDeptDetail(`${em.hospital_name}-${em.department_name}`)}
+              className={`p-3.5 rounded-xl border transition-all cursor-pointer ${
+                selectedDeptDetail === `${em.hospital_name}-${em.department_name}`
+                  ? 'bg-white border-rose-500 shadow-md ring-2 ring-rose-300'
+                  : 'bg-white/80 border-rose-200 hover:bg-white'
+              }`}
+            >
               <div className="flex items-center justify-between text-xs font-bold text-slate-800 mb-1">
                 <span className="truncate">{em.hospital_name}</span>
                 <span className="text-[10px] px-1.5 py-0.5 rounded font-extrabold bg-rose-100 text-rose-800">
@@ -140,6 +230,7 @@ export const BottleneckAnalysis: React.FC<BottleneckAnalysisProps> = ({ onSelect
               <button
                 id="btn-inspect-q6"
                 onClick={() => onSelectQuery(6)}
+                aria-label="Inspect Query 6"
                 className="text-xs text-sky-600 font-bold hover:underline flex items-center cursor-pointer"
               >
                 <span>Query 6</span>
@@ -217,62 +308,103 @@ export const BottleneckAnalysis: React.FC<BottleneckAnalysisProps> = ({ onSelect
           </div>
         </div>
 
-        {/* Triage Stratification */}
+        {/* Triage Stratification & Selected Department Breakdown Card */}
         <div className="lg:col-span-5 bg-white p-5 rounded-2xl border border-slate-200/80 shadow-xs flex flex-col justify-between">
           <div>
             <div className="flex items-center justify-between mb-3">
               <div>
-                <h3 className="font-extrabold text-base text-slate-900">Waiting-Time Stratification</h3>
-                <p className="text-xs text-slate-500">Question 5: CASE-based admission classification</p>
+                <h3 className="font-extrabold text-base text-slate-900">Score Contribution Inspector</h3>
+                <p className="text-xs text-slate-500">Why does this department receive its score?</p>
               </div>
-              <button
-                id="btn-inspect-q5"
-                onClick={() => onSelectQuery(5)}
-                className="text-xs text-sky-600 font-bold hover:underline flex items-center cursor-pointer"
-              >
-                <span>Query 5</span>
-                <ArrowUpRight className="w-3 h-3 ml-0.5" />
-              </button>
+              <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded bg-sky-100 text-sky-800">
+                Rank #{activeDetailItem.rank}
+              </span>
             </div>
 
-            <div className="space-y-3">
-              {WAIT_TIME_CLASSIFICATION.map((tier) => (
-                <div key={tier.category} className="p-3.5 rounded-xl border border-slate-100 bg-slate-50/70 space-y-2">
-                  <div className="flex items-center justify-between text-xs font-bold">
-                    <span className="text-slate-800">{tier.category}</span>
-                    <span className="font-mono px-2 py-0.5 rounded text-white text-[10px] font-bold" style={{ backgroundColor: tier.color }}>
-                      {tier.count} cases ({tier.percentage}%)
-                    </span>
+            {/* Detailed Contribution Breakdown for Selected Department */}
+            <div className="p-4 rounded-xl bg-slate-50 border border-slate-200 space-y-3">
+              <div className="flex items-center justify-between">
+                <div>
+                  <div className="font-extrabold text-sm text-slate-900">
+                    {activeDetailItem.hospital_name} - {activeDetailItem.department_name}
                   </div>
-                  <div className="w-full h-2 bg-slate-200 rounded-full overflow-hidden">
-                    <div 
-                      className="h-full rounded-full" 
-                      style={{ width: `${tier.percentage}%`, backgroundColor: tier.color }} 
-                    />
+                  <div className="text-xs text-slate-500">{activeDetailItem.total_admissions} admissions indexed</div>
+                </div>
+                <div className="text-right">
+                  <div className="text-xl font-black text-rose-600">{activeDetailItem.bottleneck_score}</div>
+                  <div className="text-[10px] uppercase font-bold text-slate-500">{activeDetailItem.status}</div>
+                </div>
+              </div>
+
+              {/* 4 Stacked Dimension Points */}
+              <div className="space-y-2 pt-2 border-t border-slate-200 text-xs">
+                <div>
+                  <div className="flex justify-between font-semibold text-slate-700">
+                    <span>⏱️ Triage Wait: {activeDetailItem.avg_wait_minutes} min</span>
+                    <span className="font-mono text-rose-600 font-bold">{activeDetailItem.wait_contribution ?? 0} / 25 pts</span>
+                  </div>
+                  <div className="w-full h-1.5 bg-slate-200 rounded-full overflow-hidden mt-1">
+                    <div className="h-full bg-rose-500 rounded-full" style={{ width: `${((activeDetailItem.wait_contribution ?? 0) / 25) * 100}%` }} />
                   </div>
                 </div>
-              ))}
+
+                <div>
+                  <div className="flex justify-between font-semibold text-slate-700">
+                    <span>🛏️ Length of Stay: {activeDetailItem.avg_los_days} days</span>
+                    <span className="font-mono text-indigo-600 font-bold">{activeDetailItem.los_contribution ?? 0} / 25 pts</span>
+                  </div>
+                  <div className="w-full h-1.5 bg-slate-200 rounded-full overflow-hidden mt-1">
+                    <div className="h-full bg-indigo-500 rounded-full" style={{ width: `${((activeDetailItem.los_contribution ?? 0) / 25) * 100}%` }} />
+                  </div>
+                </div>
+
+                <div>
+                  <div className="flex justify-between font-semibold text-slate-700">
+                    <span>🔄 Readmission: {activeDetailItem.readmission_rate_pct}%</span>
+                    <span className="font-mono text-amber-600 font-bold">{activeDetailItem.readmission_contribution ?? 0} / 25 pts</span>
+                  </div>
+                  <div className="w-full h-1.5 bg-slate-200 rounded-full overflow-hidden mt-1">
+                    <div className="h-full bg-amber-500 rounded-full" style={{ width: `${((activeDetailItem.readmission_contribution ?? 0) / 25) * 100}%` }} />
+                  </div>
+                </div>
+
+                <div>
+                  <div className="flex justify-between font-semibold text-slate-700">
+                    <span>🏥 Bed Util: {activeDetailItem.bed_utilization_pct}%</span>
+                    <span className="font-mono text-emerald-600 font-bold">{activeDetailItem.bed_util_contribution ?? 0} / 25 pts</span>
+                  </div>
+                  <div className="w-full h-1.5 bg-slate-200 rounded-full overflow-hidden mt-1">
+                    <div className="h-full bg-emerald-500 rounded-full" style={{ width: `${((activeDetailItem.bed_util_contribution ?? 0) / 25) * 100}%` }} />
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
 
           <div className="p-3 bg-sky-50 rounded-xl border border-sky-100 text-xs text-sky-900 mt-4">
             <div className="font-bold mb-0.5 flex items-center space-x-1">
               <Clock className="w-3.5 h-3.5 text-sky-600" />
-              <span>Target Clinical Standard: &lt; 45 minutes</span>
+              <span>Target Standard: &lt; 45 min wait • &lt; 20% readmission</span>
             </div>
             <p className="text-[11px] text-sky-800">
-              61.3% of admissions experience triage latency exceeding the 45-minute benchmark, requiring surge physician allocation.
+              Click any department row in the table below to inspect its individual score breakdown.
             </p>
           </div>
         </div>
       </div>
 
-      {/* Comprehensive Bottleneck Ranking Table */}
+      {/* ========================================================================= */}
+      {/* COMPREHENSIVE BOTTLENECK RANKING TABLE WITH CONTRIBUTION BREAKDOWN         */}
+      {/* ========================================================================= */}
       <div className="bg-white rounded-2xl border border-slate-200/80 shadow-xs overflow-hidden">
         <div className="p-5 border-b border-slate-200 flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-slate-50/80">
           <div>
-            <h3 className="font-extrabold text-base text-slate-900">Ranked Department Bottleneck Index</h3>
-            <p className="text-xs text-slate-500">Full 20-department composite pressure table</p>
+            <h3 className="font-extrabold text-base text-slate-900">
+              Ranked Department Bottleneck Index (Full 20 Departments)
+            </h3>
+            <p className="text-xs text-slate-500">
+              Composite ranking with 4-part dimensional contribution breakdown (Wait + LOS + Readmission + Bed Util)
+            </p>
           </div>
 
           {/* Filters */}
@@ -280,7 +412,8 @@ export const BottleneckAnalysis: React.FC<BottleneckAnalysisProps> = ({ onSelect
             <select
               value={filterHospital}
               onChange={(e) => setFilterHospital(e.target.value)}
-              className="text-xs px-2.5 py-1.5 rounded-lg border border-slate-200 bg-white text-slate-700 font-semibold focus:ring-2 focus:ring-sky-500"
+              aria-label="Filter by Hospital"
+              className="text-xs px-2.5 py-1.5 rounded-lg border border-slate-200 bg-white text-slate-700 font-semibold focus:ring-2 focus:ring-sky-500 focus:outline-hidden"
             >
               <option value="All">All Hospitals</option>
               <option value="Apollo Delhi">Apollo Delhi</option>
@@ -292,7 +425,8 @@ export const BottleneckAnalysis: React.FC<BottleneckAnalysisProps> = ({ onSelect
             <select
               value={filterStatus}
               onChange={(e) => setFilterStatus(e.target.value)}
-              className="text-xs px-2.5 py-1.5 rounded-lg border border-slate-200 bg-white text-slate-700 font-semibold focus:ring-2 focus:ring-sky-500"
+              aria-label="Filter by Risk Level"
+              className="text-xs px-2.5 py-1.5 rounded-lg border border-slate-200 bg-white text-slate-700 font-semibold focus:ring-2 focus:ring-sky-500 focus:outline-hidden"
             >
               <option value="All">All Risk Levels</option>
               <option value="Critical">Critical</option>
@@ -304,23 +438,23 @@ export const BottleneckAnalysis: React.FC<BottleneckAnalysisProps> = ({ onSelect
         </div>
 
         <div className="overflow-x-auto">
-          <table className="w-full text-left text-xs">
+          <table className="w-full text-left text-xs min-w-[750px]">
             <thead className="bg-slate-100/80 text-slate-700 uppercase font-bold tracking-wider text-[10px] border-b border-slate-200">
               <tr>
                 <th className="px-4 py-3">Rank</th>
                 <th className="px-4 py-3">Hospital</th>
                 <th className="px-4 py-3">Department</th>
-                <th className="px-4 py-3">Admissions</th>
                 <th className="px-4 py-3">Avg Wait</th>
                 <th className="px-4 py-3">Avg Stay</th>
                 <th className="px-4 py-3">Readm Rate</th>
-                <th className="px-4 py-3">Bed Util</th>
-                <th className="px-4 py-3">Bottleneck Score</th>
+                <th className="px-4 py-3">Contribution Breakdown (100 pts)</th>
+                <th className="px-4 py-3">Composite Score</th>
                 <th className="px-4 py-3">Risk Level</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100">
               {filteredBottlenecks.map((item) => {
+                const isSelected = selectedDeptDetail === `${item.hospital_name}-${item.department_name}`;
                 const statusBadge = item.status === 'Critical' 
                   ? 'bg-rose-100 text-rose-800 border-rose-200' 
                   : item.status === 'High Risk' 
@@ -330,7 +464,13 @@ export const BottleneckAnalysis: React.FC<BottleneckAnalysisProps> = ({ onSelect
                   : 'bg-emerald-100 text-emerald-800 border-emerald-200';
 
                 return (
-                  <tr key={`${item.hospital_name}-${item.department_name}`} className="hover:bg-sky-50/40 transition-colors">
+                  <tr 
+                    key={`${item.hospital_name}-${item.department_name}`} 
+                    onClick={() => setSelectedDeptDetail(`${item.hospital_name}-${item.department_name}`)}
+                    className={`cursor-pointer transition-colors ${
+                      isSelected ? 'bg-sky-50/80 font-medium' : 'hover:bg-slate-50'
+                    }`}
+                  >
                     <td className="px-4 py-3 font-extrabold text-slate-900">
                       #{item.rank}
                     </td>
@@ -340,22 +480,47 @@ export const BottleneckAnalysis: React.FC<BottleneckAnalysisProps> = ({ onSelect
                     <td className="px-4 py-3 font-medium text-slate-700">
                       {item.department_name}
                     </td>
-                    <td className="px-4 py-3 text-slate-700 font-mono">
-                      {item.total_admissions}
-                    </td>
                     <td className="px-4 py-3 font-bold font-mono text-slate-800">
                       {item.avg_wait_minutes} min
                     </td>
                     <td className="px-4 py-3 text-slate-700 font-mono">
-                      {item.avg_los_days} days
+                      {item.avg_los_days}d
                     </td>
                     <td className="px-4 py-3 text-slate-700 font-mono">
                       {item.readmission_rate_pct}%
                     </td>
-                    <td className="px-4 py-3 text-slate-700 font-mono">
-                      {item.bed_utilization_pct}%
+                    {/* Visual 4-Part Contribution Stacked Bar */}
+                    <td className="px-4 py-3 min-w-[160px]">
+                      <div className="flex h-3 rounded-full overflow-hidden bg-slate-100 border border-slate-200">
+                        <div 
+                          style={{ width: `${item.wait_contribution}%` }} 
+                          className="bg-rose-500" 
+                          title={`Wait Contribution: ${item.wait_contribution} pts`}
+                        />
+                        <div 
+                          style={{ width: `${item.los_contribution}%` }} 
+                          className="bg-indigo-500" 
+                          title={`LOS Contribution: ${item.los_contribution} pts`}
+                        />
+                        <div 
+                          style={{ width: `${item.readmission_contribution}%` }} 
+                          className="bg-amber-500" 
+                          title={`Readmission Contribution: ${item.readmission_contribution} pts`}
+                        />
+                        <div 
+                          style={{ width: `${item.bed_util_contribution}%` }} 
+                          className="bg-emerald-500" 
+                          title={`Bed Util Contribution: ${item.bed_util_contribution} pts`}
+                        />
+                      </div>
+                      <div className="flex justify-between text-[9px] text-slate-400 font-mono mt-0.5">
+                        <span className="text-rose-600 font-semibold">{item.wait_contribution}</span>
+                        <span className="text-indigo-600 font-semibold">{item.los_contribution}</span>
+                        <span className="text-amber-600 font-semibold">{item.readmission_contribution}</span>
+                        <span className="text-emerald-600 font-semibold">{item.bed_util_contribution}</span>
+                      </div>
                     </td>
-                    <td className="px-4 py-3 font-black text-sky-800 font-mono text-sm">
+                    <td className="px-4 py-3 font-black text-slate-900 font-mono text-sm">
                       {item.bottleneck_score}
                     </td>
                     <td className="px-4 py-3">

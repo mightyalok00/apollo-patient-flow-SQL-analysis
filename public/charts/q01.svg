@@ -1,0 +1,88 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 780 400" width="100%" height="100%" style="background-color: #ffffff; font-family: 'Figtree', 'Plus Jakarta Sans', system-ui, sans-serif;">
+  <defs>
+    <linearGradient id="blueGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#007c9d" />
+      <stop offset="100%" stop-color="#0284c7" />
+    </linearGradient>
+    <linearGradient id="orangeGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#f58320" />
+      <stop offset="100%" stop-color="#ea580c" />
+    </linearGradient>
+    <linearGradient id="heroGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#002d39" />
+      <stop offset="100%" stop-color="#007c9d" />
+    </linearGradient>
+    <filter id="cardShadow" x="-5%" y="-5%" width="110%" height="115%" filterUnits="userSpaceOnUse">
+      <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#002d39" flood-opacity="0.06"/>
+    </filter>
+  </defs>
+
+  <!-- Canvas Background & Border -->
+  <rect width="780" height="400" fill="#ffffff" rx="8"/>
+  <rect x="0.5" y="0.5" width="779" height="399" fill="none" stroke="#d7e7eb" stroke-width="1" rx="8"/>
+
+  <!-- Chart Header -->
+  <g transform="translate(30, 32)">
+    <text x="0" y="0" font-size="16" font-weight="700" fill="#002d39">Q01: Database Schema & Entity Sizing</text>
+    <text x="0" y="18" font-size="11" fill="#527983">Treemap representation of record volumes across relational database tables</text>
+  </g>
+
+  <!-- Chart Graphics Content -->
+  <g>
+        <g transform="translate(30, 70)">
+          <rect width="420" height="240" rx="6" fill="#007c9d" opacity="0.9"/>
+          <rect width="420" height="240" rx="6" fill="none" stroke="#ffffff" stroke-width="2"/>
+          <text x="14" y="24" font-size="13" font-weight="700" fill="#ffffff">bed_occupancy</text>
+          <text x="14" y="44" font-size="18" font-weight="800" fill="#ffffff">7,300</text>
+          <text x="14" y="228" font-size="10" fill="#ffffff" opacity="0.85">Time-Series Logs</text>
+        </g>
+        
+        <g transform="translate(460, 70)">
+          <rect width="290" height="160" rx="6" fill="#0284c7" opacity="0.9"/>
+          <rect width="290" height="160" rx="6" fill="none" stroke="#ffffff" stroke-width="2"/>
+          <text x="14" y="24" font-size="13" font-weight="700" fill="#ffffff">admissions</text>
+          <text x="14" y="44" font-size="18" font-weight="800" fill="#ffffff">2,500</text>
+          <text x="14" y="148" font-size="10" fill="#ffffff" opacity="0.85">Patient Events</text>
+        </g>
+        
+        <g transform="translate(460, 240)">
+          <rect width="140" height="70" rx="6" fill="#38bdf8" opacity="0.9"/>
+          <rect width="140" height="70" rx="6" fill="none" stroke="#ffffff" stroke-width="2"/>
+          <text x="14" y="24" font-size="13" font-weight="700" fill="#ffffff">patients</text>
+          <text x="14" y="44" font-size="18" font-weight="800" fill="#ffffff">500</text>
+          <text x="14" y="58" font-size="10" fill="#ffffff" opacity="0.85">Patient Master</text>
+        </g>
+        
+        <g transform="translate(610, 240)">
+          <rect width="140" height="70" rx="6" fill="#f58320" opacity="0.9"/>
+          <rect width="140" height="70" rx="6" fill="none" stroke="#ffffff" stroke-width="2"/>
+          <text x="14" y="24" font-size="13" font-weight="700" fill="#ffffff">doctors</text>
+          <text x="14" y="44" font-size="18" font-weight="800" fill="#ffffff">60</text>
+          <text x="14" y="58" font-size="10" fill="#ffffff" opacity="0.85">Clinical Staff</text>
+        </g>
+        
+        <g transform="translate(460, 320)">
+          <rect width="140" height="45" rx="6" fill="#10b981" opacity="0.9"/>
+          <rect width="140" height="45" rx="6" fill="none" stroke="#ffffff" stroke-width="2"/>
+          <text x="14" y="24" font-size="13" font-weight="700" fill="#ffffff">departments</text>
+          <text x="14" y="44" font-size="18" font-weight="800" fill="#ffffff">20</text>
+          <text x="14" y="33" font-size="10" fill="#ffffff" opacity="0.85">Wards & Specialties</text>
+        </g>
+        
+        <g transform="translate(610, 320)">
+          <rect width="140" height="45" rx="6" fill="#fcd34d" opacity="0.9"/>
+          <rect width="140" height="45" rx="6" fill="none" stroke="#ffffff" stroke-width="2"/>
+          <text x="14" y="24" font-size="13" font-weight="700" fill="#ffffff">hospitals</text>
+          <text x="14" y="44" font-size="18" font-weight="800" fill="#ffffff">4</text>
+          <text x="14" y="33" font-size="10" fill="#ffffff" opacity="0.85">Network Facilities</text>
+        </g>
+        </g>
+
+  <!-- Apollo Analytical Footer Watermark -->
+  <g transform="translate(30, 384)">
+    <line x1="0" y1="-10" x2="720" y2="-10" stroke="#d7e7eb" stroke-width="0.75" />
+    <text x="0" y="0" font-size="9" fill="#527983" font-style="italic">
+      Network-wide analytical snapshot | Dataset: 4 Hospitals, 2,500 Admissions, 7,300 Bed Logs | Apollo Portfolio Project
+    </text>
+  </g>
+</svg>

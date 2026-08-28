@@ -1,0 +1,139 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 780 400" width="100%" height="100%" style="background-color: #ffffff; font-family: 'Figtree', 'Plus Jakarta Sans', system-ui, sans-serif;">
+  <defs>
+    <linearGradient id="blueGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#007c9d" />
+      <stop offset="100%" stop-color="#0284c7" />
+    </linearGradient>
+    <linearGradient id="orangeGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#f58320" />
+      <stop offset="100%" stop-color="#ea580c" />
+    </linearGradient>
+    <linearGradient id="heroGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#002d39" />
+      <stop offset="100%" stop-color="#007c9d" />
+    </linearGradient>
+    <filter id="cardShadow" x="-5%" y="-5%" width="110%" height="115%" filterUnits="userSpaceOnUse">
+      <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#002d39" flood-opacity="0.06"/>
+    </filter>
+  </defs>
+
+  <!-- Canvas Background & Border -->
+  <rect width="780" height="400" fill="#ffffff" rx="8"/>
+  <rect x="0.5" y="0.5" width="779" height="399" fill="none" stroke="#d7e7eb" stroke-width="1" rx="8"/>
+
+  <!-- Chart Header -->
+  <g transform="translate(30, 32)">
+    <text x="0" y="0" font-size="16" font-weight="700" fill="#002d39">Q09: Bed Utilization Rate vs Capacity Thresholds</text>
+    <text x="0" y="18" font-size="11" fill="#527983">Bullet chart tracking inpatient bed strain against operational 75% warning and 90% critical limits</text>
+  </g>
+
+  <!-- Chart Graphics Content -->
+  <g transform="translate(40, 75)">
+    <g transform="translate(180, 0)">
+      <rect x="0" y="0" width="12" height="12" fill="#e3f8ec"/>
+      <text x="18" y="10" font-size="10" fill="#002d39">Optimal (&lt;75%)</text>
+      <rect x="130" y="0" width="12" height="12" fill="#fff8e6"/>
+      <text x="148" y="10" font-size="10" fill="#002d39">Warning (75-90%)</text>
+      <rect x="270" y="0" width="12" height="12" fill="#fee2e2"/>
+      <text x="288" y="10" font-size="10" fill="#002d39">Critical (&gt;90%)</text>
+    </g>
+    
+        <g transform="translate(0, 25)">
+          <text x="175" y="16" font-size="10.5" font-weight="600" fill="#002d39" text-anchor="end">Apollo Delhi Emergency</text>
+          <g transform="translate(190, 4)">
+            <!-- Threshold backgrounds -->
+            <rect x="0" y="0" width="330" height="16" fill="#e3f8ec" rx="2"/>
+            <rect x="330" y="0" width="66" height="16" fill="#fff8e6"/>
+            <rect x="396" y="0" width="44" height="16" fill="#fee2e2"/>
+            <!-- Active utilization bar -->
+            <rect x="0" y="3" width="389" height="10" fill="#e11d48" rx="2"/>
+            <!-- Target line 85% -->
+            <line x1="374" y1="-2" x2="374" y2="18" stroke="#002d39" stroke-width="2" stroke-dasharray="2,2"/>
+          </g>
+          <text x="645" y="16" font-size="11" font-weight="700" fill="#e11d48">88.5%</text>
+        </g>
+        
+        <g transform="translate(0, 65)">
+          <text x="175" y="16" font-size="10.5" font-weight="600" fill="#002d39" text-anchor="end">Apollo Mumbai Emergency</text>
+          <g transform="translate(190, 4)">
+            <!-- Threshold backgrounds -->
+            <rect x="0" y="0" width="330" height="16" fill="#e3f8ec" rx="2"/>
+            <rect x="330" y="0" width="66" height="16" fill="#fff8e6"/>
+            <rect x="396" y="0" width="44" height="16" fill="#fee2e2"/>
+            <!-- Active utilization bar -->
+            <rect x="0" y="3" width="392" height="10" fill="#e11d48" rx="2"/>
+            <!-- Target line 85% -->
+            <line x1="374" y1="-2" x2="374" y2="18" stroke="#002d39" stroke-width="2" stroke-dasharray="2,2"/>
+          </g>
+          <text x="645" y="16" font-size="11" font-weight="700" fill="#e11d48">89.2%</text>
+        </g>
+        
+        <g transform="translate(0, 105)">
+          <text x="175" y="16" font-size="10.5" font-weight="600" fill="#002d39" text-anchor="end">Apollo Bangalore Emergency</text>
+          <g transform="translate(190, 4)">
+            <!-- Threshold backgrounds -->
+            <rect x="0" y="0" width="330" height="16" fill="#e3f8ec" rx="2"/>
+            <rect x="330" y="0" width="66" height="16" fill="#fff8e6"/>
+            <rect x="396" y="0" width="44" height="16" fill="#fee2e2"/>
+            <!-- Active utilization bar -->
+            <rect x="0" y="3" width="402" height="10" fill="#e11d48" rx="2"/>
+            <!-- Target line 85% -->
+            <line x1="374" y1="-2" x2="374" y2="18" stroke="#002d39" stroke-width="2" stroke-dasharray="2,2"/>
+          </g>
+          <text x="645" y="16" font-size="11" font-weight="700" fill="#e11d48">91.4%</text>
+        </g>
+        
+        <g transform="translate(0, 145)">
+          <text x="175" y="16" font-size="10.5" font-weight="600" fill="#002d39" text-anchor="end">Apollo Hyderabad Emergency</text>
+          <g transform="translate(190, 4)">
+            <!-- Threshold backgrounds -->
+            <rect x="0" y="0" width="330" height="16" fill="#e3f8ec" rx="2"/>
+            <rect x="330" y="0" width="66" height="16" fill="#fff8e6"/>
+            <rect x="396" y="0" width="44" height="16" fill="#fee2e2"/>
+            <!-- Active utilization bar -->
+            <rect x="0" y="3" width="387" height="10" fill="#e11d48" rx="2"/>
+            <!-- Target line 85% -->
+            <line x1="374" y1="-2" x2="374" y2="18" stroke="#002d39" stroke-width="2" stroke-dasharray="2,2"/>
+          </g>
+          <text x="645" y="16" font-size="11" font-weight="700" fill="#e11d48">88.0%</text>
+        </g>
+        
+        <g transform="translate(0, 185)">
+          <text x="175" y="16" font-size="10.5" font-weight="600" fill="#002d39" text-anchor="end">Network General Medicine</text>
+          <g transform="translate(190, 4)">
+            <!-- Threshold backgrounds -->
+            <rect x="0" y="0" width="330" height="16" fill="#e3f8ec" rx="2"/>
+            <rect x="330" y="0" width="66" height="16" fill="#fff8e6"/>
+            <rect x="396" y="0" width="44" height="16" fill="#fee2e2"/>
+            <!-- Active utilization bar -->
+            <rect x="0" y="3" width="323" height="10" fill="#007c9d" rx="2"/>
+            <!-- Target line 85% -->
+            <line x1="374" y1="-2" x2="374" y2="18" stroke="#002d39" stroke-width="2" stroke-dasharray="2,2"/>
+          </g>
+          <text x="645" y="16" font-size="11" font-weight="700" fill="#007c9d">73.5%</text>
+        </g>
+        
+        <g transform="translate(0, 225)">
+          <text x="175" y="16" font-size="10.5" font-weight="600" fill="#002d39" text-anchor="end">Network Cardiology Wards</text>
+          <g transform="translate(190, 4)">
+            <!-- Threshold backgrounds -->
+            <rect x="0" y="0" width="330" height="16" fill="#e3f8ec" rx="2"/>
+            <rect x="330" y="0" width="66" height="16" fill="#fff8e6"/>
+            <rect x="396" y="0" width="44" height="16" fill="#fee2e2"/>
+            <!-- Active utilization bar -->
+            <rect x="0" y="3" width="315" height="10" fill="#10b981" rx="2"/>
+            <!-- Target line 85% -->
+            <line x1="374" y1="-2" x2="374" y2="18" stroke="#002d39" stroke-width="2" stroke-dasharray="2,2"/>
+          </g>
+          <text x="645" y="16" font-size="11" font-weight="700" fill="#10b981">71.8%</text>
+        </g>
+        </g>
+
+  <!-- Apollo Analytical Footer Watermark -->
+  <g transform="translate(30, 384)">
+    <line x1="0" y1="-10" x2="720" y2="-10" stroke="#d7e7eb" stroke-width="0.75" />
+    <text x="0" y="0" font-size="9" fill="#527983" font-style="italic">
+      Network-wide analytical snapshot | Dataset: 4 Hospitals, 2,500 Admissions, 7,300 Bed Logs | Apollo Portfolio Project
+    </text>
+  </g>
+</svg>

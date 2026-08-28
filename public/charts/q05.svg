@@ -1,0 +1,106 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 780 400" width="100%" height="100%" style="background-color: #ffffff; font-family: 'Figtree', 'Plus Jakarta Sans', system-ui, sans-serif;">
+  <defs>
+    <linearGradient id="blueGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#007c9d" />
+      <stop offset="100%" stop-color="#0284c7" />
+    </linearGradient>
+    <linearGradient id="orangeGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#f58320" />
+      <stop offset="100%" stop-color="#ea580c" />
+    </linearGradient>
+    <linearGradient id="heroGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#002d39" />
+      <stop offset="100%" stop-color="#007c9d" />
+    </linearGradient>
+    <filter id="cardShadow" x="-5%" y="-5%" width="110%" height="115%" filterUnits="userSpaceOnUse">
+      <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#002d39" flood-opacity="0.06"/>
+    </filter>
+  </defs>
+
+  <!-- Canvas Background & Border -->
+  <rect width="780" height="400" fill="#ffffff" rx="8"/>
+  <rect x="0.5" y="0.5" width="779" height="399" fill="none" stroke="#d7e7eb" stroke-width="1" rx="8"/>
+
+  <!-- Chart Header -->
+  <g transform="translate(30, 32)">
+    <text x="0" y="0" font-size="16" font-weight="700" fill="#002d39">Q05: Waiting-Time Classification Proportions</text>
+    <text x="0" y="18" font-size="11" fill="#527983">100% stacked bar comparison of triage severity tiers across emergency and inpatient units</text>
+  </g>
+
+  <!-- Chart Graphics Content -->
+  <g transform="translate(40, 85)">
+    <g transform="translate(180, 0)">
+      <rect x="0" y="0" width="12" height="12" fill="#10b981" rx="2"/>
+      <text x="18" y="10" font-size="10" fill="#002d39">Low (&lt;30m)</text>
+      <rect x="110" y="0" width="12" height="12" fill="#007c9d" rx="2"/>
+      <text x="128" y="10" font-size="10" fill="#002d39">Moderate (30-59m)</text>
+      <rect x="250" y="0" width="12" height="12" fill="#f58320" rx="2"/>
+      <text x="268" y="10" font-size="10" fill="#002d39">High (60-119m)</text>
+      <rect x="380" y="0" width="12" height="12" fill="#e11d48" rx="2"/>
+      <text x="398" y="10" font-size="10" fill="#002d39">Critical (≥120m)</text>
+    </g>
+    
+        <g transform="translate(0, 30)">
+          <text x="180" y="16" font-size="10.5" font-weight="600" fill="#002d39" text-anchor="end">Apollo Delhi Emergency</text>
+          <g transform="translate(195, 2)">
+            <rect x="0" y="0" width="36.800000000000004" height="20" fill="#10b981"/>
+            <rect x="36.800000000000004" y="0" width="64.4" height="20" fill="#007c9d"/>
+            <rect x="101.20000000000002" y="0" width="207.0" height="20" fill="#f58320"/>
+            <rect x="308.20000000000005" y="0" width="151.8" height="20" fill="#e11d48"/>
+          </g>
+          <text x="665" y="16" font-size="10" font-weight="700" fill="#e11d48">33% Crit</text>
+        </g>
+        
+        <g transform="translate(0, 76)">
+          <text x="180" y="16" font-size="10.5" font-weight="600" fill="#002d39" text-anchor="end">Apollo Mumbai Emergency</text>
+          <g transform="translate(195, 2)">
+            <rect x="0" y="0" width="32.2" height="20" fill="#10b981"/>
+            <rect x="32.2" y="0" width="73.60000000000001" height="20" fill="#007c9d"/>
+            <rect x="105.80000000000001" y="0" width="202.4" height="20" fill="#f58320"/>
+            <rect x="308.20000000000005" y="0" width="151.8" height="20" fill="#e11d48"/>
+          </g>
+          <text x="665" y="16" font-size="10" font-weight="700" fill="#e11d48">33% Crit</text>
+        </g>
+        
+        <g transform="translate(0, 122)">
+          <text x="180" y="16" font-size="10.5" font-weight="600" fill="#002d39" text-anchor="end">Apollo Bangalore Emergency</text>
+          <g transform="translate(195, 2)">
+            <rect x="0" y="0" width="23.0" height="20" fill="#10b981"/>
+            <rect x="23.0" y="0" width="55.199999999999996" height="20" fill="#007c9d"/>
+            <rect x="78.19999999999999" y="0" width="211.60000000000002" height="20" fill="#f58320"/>
+            <rect x="289.8" y="0" width="170.2" height="20" fill="#e11d48"/>
+          </g>
+          <text x="665" y="16" font-size="10" font-weight="700" fill="#e11d48">37% Crit</text>
+        </g>
+        
+        <g transform="translate(0, 168)">
+          <text x="180" y="16" font-size="10.5" font-weight="600" fill="#002d39" text-anchor="end">Apollo Hyderabad Emergency</text>
+          <g transform="translate(195, 2)">
+            <rect x="0" y="0" width="41.4" height="20" fill="#10b981"/>
+            <rect x="41.4" y="0" width="69.0" height="20" fill="#007c9d"/>
+            <rect x="110.4" y="0" width="197.79999999999998" height="20" fill="#f58320"/>
+            <rect x="308.2" y="0" width="151.8" height="20" fill="#e11d48"/>
+          </g>
+          <text x="665" y="16" font-size="10" font-weight="700" fill="#e11d48">33% Crit</text>
+        </g>
+        
+        <g transform="translate(0, 214)">
+          <text x="180" y="16" font-size="10.5" font-weight="600" fill="#002d39" text-anchor="end">Network Non-Emergency Wards</text>
+          <g transform="translate(195, 2)">
+            <rect x="0" y="0" width="174.8" height="20" fill="#10b981"/>
+            <rect x="174.8" y="0" width="220.79999999999998" height="20" fill="#007c9d"/>
+            <rect x="395.6" y="0" width="64.4" height="20" fill="#f58320"/>
+            <rect x="460.0" y="0" width="0.0" height="20" fill="#e11d48"/>
+          </g>
+          <text x="665" y="16" font-size="10" font-weight="700" fill="#e11d48">0% Crit</text>
+        </g>
+        </g>
+
+  <!-- Apollo Analytical Footer Watermark -->
+  <g transform="translate(30, 384)">
+    <line x1="0" y1="-10" x2="720" y2="-10" stroke="#d7e7eb" stroke-width="0.75" />
+    <text x="0" y="0" font-size="9" fill="#527983" font-style="italic">
+      Network-wide analytical snapshot | Dataset: 4 Hospitals, 2,500 Admissions, 7,300 Bed Logs | Apollo Portfolio Project
+    </text>
+  </g>
+</svg>

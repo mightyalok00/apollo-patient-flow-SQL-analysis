@@ -1,0 +1,80 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 780 400" width="100%" height="100%" style="background-color: #ffffff; font-family: 'Figtree', 'Plus Jakarta Sans', system-ui, sans-serif;">
+  <defs>
+    <linearGradient id="blueGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#007c9d" />
+      <stop offset="100%" stop-color="#0284c7" />
+    </linearGradient>
+    <linearGradient id="orangeGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#f58320" />
+      <stop offset="100%" stop-color="#ea580c" />
+    </linearGradient>
+    <linearGradient id="heroGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#002d39" />
+      <stop offset="100%" stop-color="#007c9d" />
+    </linearGradient>
+    <filter id="cardShadow" x="-5%" y="-5%" width="110%" height="115%" filterUnits="userSpaceOnUse">
+      <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#002d39" flood-opacity="0.06"/>
+    </filter>
+  </defs>
+
+  <!-- Canvas Background & Border -->
+  <rect width="780" height="400" fill="#ffffff" rx="8"/>
+  <rect x="0.5" y="0.5" width="779" height="399" fill="none" stroke="#d7e7eb" stroke-width="1" rx="8"/>
+
+  <!-- Chart Header -->
+  <g transform="translate(30, 32)">
+    <text x="0" y="0" font-size="16" font-weight="700" fill="#002d39">Q04: Patient Waiting-Time Distribution</text>
+    <text x="0" y="18" font-size="11" fill="#527983">Histogram of triage-to-physician wait times with clinical severity thresholds</text>
+  </g>
+
+  <!-- Chart Graphics Content -->
+  
+    <g transform="translate(60, 0)">
+      <line x1="0" y1="300" x2="640" y2="300" stroke="#d7e7eb" stroke-width="1"/>
+      <rect x="360" y="80" width="280" height="220" fill="#fff8e6" opacity="0.6"/>
+      <text x="500" y="100" font-size="10" font-weight="700" fill="#f58320" text-anchor="middle">PRIORITY INTERVENTION ZONE (≥60m)</text>
+    
+        <g transform="translate(40, 0)">
+          <rect x="0" y="221" width="85" height="79" rx="4" fill="#10b981"/>
+          <text x="42" y="213" font-size="12" font-weight="700" fill="#002d39" text-anchor="middle">420</text>
+          <text x="42" y="316" font-size="11" font-weight="600" fill="#002d39" text-anchor="middle">0-29m</text>
+          <text x="42" y="330" font-size="9" fill="#527983" text-anchor="middle">Low</text>
+        </g>
+        
+        <g transform="translate(160, 0)">
+          <rect x="0" y="131" width="85" height="169" rx="4" fill="#007c9d"/>
+          <text x="42" y="123" font-size="12" font-weight="700" fill="#002d39" text-anchor="middle">890</text>
+          <text x="42" y="316" font-size="11" font-weight="600" fill="#002d39" text-anchor="middle">30-59m</text>
+          <text x="42" y="330" font-size="9" fill="#527983" text-anchor="middle">Moderate</text>
+        </g>
+        
+        <g transform="translate(280, 0)">
+          <rect x="0" y="166" width="85" height="134" rx="4" fill="#f58320"/>
+          <text x="42" y="158" font-size="12" font-weight="700" fill="#002d39" text-anchor="middle">710</text>
+          <text x="42" y="316" font-size="11" font-weight="600" fill="#002d39" text-anchor="middle">60-89m</text>
+          <text x="42" y="330" font-size="9" fill="#527983" text-anchor="middle">High</text>
+        </g>
+        
+        <g transform="translate(400, 0)">
+          <rect x="0" y="232" width="85" height="68" rx="4" fill="#e11d48"/>
+          <text x="42" y="224" font-size="12" font-weight="700" fill="#002d39" text-anchor="middle">360</text>
+          <text x="42" y="316" font-size="11" font-weight="600" fill="#002d39" text-anchor="middle">90-119m</text>
+          <text x="42" y="330" font-size="9" fill="#527983" text-anchor="middle">Critical</text>
+        </g>
+        
+        <g transform="translate(520, 0)">
+          <rect x="0" y="278" width="85" height="22" rx="4" fill="#991b1b"/>
+          <text x="42" y="270" font-size="12" font-weight="700" fill="#002d39" text-anchor="middle">120</text>
+          <text x="42" y="316" font-size="11" font-weight="600" fill="#002d39" text-anchor="middle">120m+</text>
+          <text x="42" y="330" font-size="9" fill="#527983" text-anchor="middle">Severe Spikes</text>
+        </g>
+        </g>
+
+  <!-- Apollo Analytical Footer Watermark -->
+  <g transform="translate(30, 384)">
+    <line x1="0" y1="-10" x2="720" y2="-10" stroke="#d7e7eb" stroke-width="0.75" />
+    <text x="0" y="0" font-size="9" fill="#527983" font-style="italic">
+      Network-wide analytical snapshot | Dataset: 4 Hospitals, 2,500 Admissions, 7,300 Bed Logs | Apollo Portfolio Project
+    </text>
+  </g>
+</svg>

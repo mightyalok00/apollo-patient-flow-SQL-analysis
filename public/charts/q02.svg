@@ -1,0 +1,81 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 780 400" width="100%" height="100%" style="background-color: #ffffff; font-family: 'Figtree', 'Plus Jakarta Sans', system-ui, sans-serif;">
+  <defs>
+    <linearGradient id="blueGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#007c9d" />
+      <stop offset="100%" stop-color="#0284c7" />
+    </linearGradient>
+    <linearGradient id="orangeGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#f58320" />
+      <stop offset="100%" stop-color="#ea580c" />
+    </linearGradient>
+    <linearGradient id="heroGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#002d39" />
+      <stop offset="100%" stop-color="#007c9d" />
+    </linearGradient>
+    <filter id="cardShadow" x="-5%" y="-5%" width="110%" height="115%" filterUnits="userSpaceOnUse">
+      <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#002d39" flood-opacity="0.06"/>
+    </filter>
+  </defs>
+
+  <!-- Canvas Background & Border -->
+  <rect width="780" height="400" fill="#ffffff" rx="8"/>
+  <rect x="0.5" y="0.5" width="779" height="399" fill="none" stroke="#d7e7eb" stroke-width="1" rx="8"/>
+
+  <!-- Chart Header -->
+  <g transform="translate(30, 32)">
+    <text x="0" y="0" font-size="16" font-weight="700" fill="#002d39">Q02: Hospital Admission Volume Ranking</text>
+    <text x="0" y="18" font-size="11" fill="#527983">Ranked patient admissions and percentage volume share by facility</text>
+  </g>
+
+  <!-- Chart Graphics Content -->
+  
+    <g transform="translate(60, 0)">
+      <!-- Grid lines -->
+      <line x1="0" y1="310" x2="640" y2="310" stroke="#d7e7eb" stroke-width="1"/>
+      <line x1="0" y1="240" x2="640" y2="240" stroke="#eef4f6" stroke-width="1" stroke-dasharray="4,4"/>
+      <line x1="0" y1="170" x2="640" y2="170" stroke="#eef4f6" stroke-width="1" stroke-dasharray="4,4"/>
+      <line x1="0" y1="100" x2="640" y2="100" stroke="#eef4f6" stroke-width="1" stroke-dasharray="4,4"/>
+      
+      <!-- Axis Labels -->
+      <text x="-12" y="314" font-size="10" fill="#527983" text-anchor="end">0</text>
+      <text x="-12" y="244" font-size="10" fill="#527983" text-anchor="end">200</text>
+      <text x="-12" y="174" font-size="10" fill="#527983" text-anchor="end">400</text>
+      <text x="-12" y="104" font-size="10" fill="#527983" text-anchor="end">600</text>
+    
+        <g transform="translate(50, 0)">
+          <rect x="0" y="105" width="90" height="205" rx="4" fill="#002d39" />
+          <text x="45" y="95" font-size="13" font-weight="700" fill="#002d39" text-anchor="middle">654</text>
+          <text x="45" y="79" font-size="10" font-weight="600" fill="#007c9d" text-anchor="middle">(26.2%)</text>
+          <text x="45" y="328" font-size="11" font-weight="600" fill="#002d39" text-anchor="middle">Hyderabad</text>
+        </g>
+        
+        <g transform="translate(195, 0)">
+          <rect x="0" y="112" width="90" height="198" rx="4" fill="#007c9d" />
+          <text x="45" y="102" font-size="13" font-weight="700" fill="#002d39" text-anchor="middle">631</text>
+          <text x="45" y="86" font-size="10" font-weight="600" fill="#007c9d" text-anchor="middle">(25.2%)</text>
+          <text x="45" y="328" font-size="11" font-weight="600" fill="#002d39" text-anchor="middle">Mumbai</text>
+        </g>
+        
+        <g transform="translate(340, 0)">
+          <rect x="0" y="112" width="90" height="198" rx="4" fill="#0284c7" />
+          <text x="45" y="102" font-size="13" font-weight="700" fill="#002d39" text-anchor="middle">630</text>
+          <text x="45" y="86" font-size="10" font-weight="600" fill="#007c9d" text-anchor="middle">(25.2%)</text>
+          <text x="45" y="328" font-size="11" font-weight="600" fill="#002d39" text-anchor="middle">Delhi</text>
+        </g>
+        
+        <g transform="translate(485, 0)">
+          <rect x="0" y="127" width="90" height="183" rx="4" fill="#38bdf8" />
+          <text x="45" y="117" font-size="13" font-weight="700" fill="#002d39" text-anchor="middle">585</text>
+          <text x="45" y="101" font-size="10" font-weight="600" fill="#007c9d" text-anchor="middle">(23.4%)</text>
+          <text x="45" y="328" font-size="11" font-weight="600" fill="#002d39" text-anchor="middle">Bangalore</text>
+        </g>
+        </g>
+
+  <!-- Apollo Analytical Footer Watermark -->
+  <g transform="translate(30, 384)">
+    <line x1="0" y1="-10" x2="720" y2="-10" stroke="#d7e7eb" stroke-width="0.75" />
+    <text x="0" y="0" font-size="9" fill="#527983" font-style="italic">
+      Network-wide analytical snapshot | Dataset: 4 Hospitals, 2,500 Admissions, 7,300 Bed Logs | Apollo Portfolio Project
+    </text>
+  </g>
+</svg>

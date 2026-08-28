@@ -96,6 +96,13 @@ export const DOCTORS: Doctor[] = [
   { doctor_id: 60, doctor_name: 'Dr. Kalyan Chakravarthy', specialty: 'Neurology', department_id: 20, department_name: 'Neurology', hospital_id: 4, hospital_name: 'Apollo Hyderabad' },
 ];
 
+export const BOTTLENECK_WEIGHTS = {
+  wait_time: { weight: 0.25, label: 'Triage Wait Time (25%)', description: 'Normalized percentile rank of emergency & department waiting minutes' },
+  los: { weight: 0.25, label: 'Length of Stay (25%)', description: 'Normalized percentile rank of average inpatient duration in days' },
+  readmission: { weight: 0.25, label: '30-Day Readmission Rate (25%)', description: 'Normalized percentile rank of 30-day post-discharge bouncebacks' },
+  bed_utilization: { weight: 0.25, label: 'Bed Utilization Rate (25%)', description: 'Normalized percentile rank of active ward bed capacity pressure' }
+};
+
 export const DEPARTMENT_BOTTLENECKS: DepartmentBottleneck[] = [
   {
     rank: 1,
@@ -107,7 +114,11 @@ export const DEPARTMENT_BOTTLENECKS: DepartmentBottleneck[] = [
     readmission_rate_pct: 37.72,
     bed_utilization_pct: 47.09,
     bottleneck_score: 92.11,
-    status: 'Critical'
+    status: 'Critical',
+    wait_contribution: 24.60,
+    los_contribution: 24.20,
+    readmission_contribution: 22.80,
+    bed_util_contribution: 20.51
   },
   {
     rank: 2,
@@ -119,7 +130,11 @@ export const DEPARTMENT_BOTTLENECKS: DepartmentBottleneck[] = [
     readmission_rate_pct: 34.71,
     bed_utilization_pct: 46.85,
     bottleneck_score: 89.65,
-    status: 'Critical'
+    status: 'Critical',
+    wait_contribution: 25.00,
+    los_contribution: 23.10,
+    readmission_contribution: 21.20,
+    bed_util_contribution: 20.35
   },
   {
     rank: 3,
@@ -131,7 +146,11 @@ export const DEPARTMENT_BOTTLENECKS: DepartmentBottleneck[] = [
     readmission_rate_pct: 37.40,
     bed_utilization_pct: 47.32,
     bottleneck_score: 88.90,
-    status: 'Critical'
+    status: 'Critical',
+    wait_contribution: 24.10,
+    los_contribution: 23.30,
+    readmission_contribution: 22.70,
+    bed_util_contribution: 18.80
   },
   {
     rank: 4,
@@ -143,7 +162,11 @@ export const DEPARTMENT_BOTTLENECKS: DepartmentBottleneck[] = [
     readmission_rate_pct: 35.16,
     bed_utilization_pct: 45.92,
     bottleneck_score: 86.40,
-    status: 'High Risk'
+    status: 'High Risk',
+    wait_contribution: 23.70,
+    los_contribution: 22.80,
+    readmission_contribution: 21.40,
+    bed_util_contribution: 18.50
   },
   {
     rank: 5,
@@ -155,7 +178,11 @@ export const DEPARTMENT_BOTTLENECKS: DepartmentBottleneck[] = [
     readmission_rate_pct: 40.77,
     bed_utilization_pct: 44.18,
     bottleneck_score: 64.20,
-    status: 'High Risk'
+    status: 'High Risk',
+    wait_contribution: 13.80,
+    los_contribution: 23.50,
+    readmission_contribution: 25.00,
+    bed_util_contribution: 1.90
   },
   {
     rank: 6,
@@ -167,7 +194,11 @@ export const DEPARTMENT_BOTTLENECKS: DepartmentBottleneck[] = [
     readmission_rate_pct: 36.50,
     bed_utilization_pct: 43.80,
     bottleneck_score: 61.15,
-    status: 'Moderate'
+    status: 'Moderate',
+    wait_contribution: 13.50,
+    los_contribution: 22.60,
+    readmission_contribution: 22.20,
+    bed_util_contribution: 2.85
   },
   {
     rank: 7,
@@ -179,7 +210,11 @@ export const DEPARTMENT_BOTTLENECKS: DepartmentBottleneck[] = [
     readmission_rate_pct: 34.07,
     bed_utilization_pct: 44.90,
     bottleneck_score: 59.80,
-    status: 'Moderate'
+    status: 'Moderate',
+    wait_contribution: 14.10,
+    los_contribution: 21.90,
+    readmission_contribution: 20.60,
+    bed_util_contribution: 3.20
   },
   {
     rank: 8,
@@ -191,7 +226,11 @@ export const DEPARTMENT_BOTTLENECKS: DepartmentBottleneck[] = [
     readmission_rate_pct: 33.58,
     bed_utilization_pct: 43.70,
     bottleneck_score: 58.60,
-    status: 'Moderate'
+    status: 'Moderate',
+    wait_contribution: 13.20,
+    los_contribution: 22.30,
+    readmission_contribution: 20.30,
+    bed_util_contribution: 2.80
   },
   {
     rank: 9,
@@ -203,7 +242,11 @@ export const DEPARTMENT_BOTTLENECKS: DepartmentBottleneck[] = [
     readmission_rate_pct: 31.78,
     bed_utilization_pct: 42.10,
     bottleneck_score: 53.40,
-    status: 'Normal'
+    status: 'Normal',
+    wait_contribution: 12.30,
+    los_contribution: 21.40,
+    readmission_contribution: 18.90,
+    bed_util_contribution: 0.80
   },
   {
     rank: 10,
@@ -215,7 +258,11 @@ export const DEPARTMENT_BOTTLENECKS: DepartmentBottleneck[] = [
     readmission_rate_pct: 29.09,
     bed_utilization_pct: 41.50,
     bottleneck_score: 48.20,
-    status: 'Normal'
+    status: 'Normal',
+    wait_contribution: 11.20,
+    los_contribution: 20.50,
+    readmission_contribution: 16.50,
+    bed_util_contribution: 0.00
   }
 ];
 
