@@ -40,6 +40,7 @@ import { SAMPLE_ADMISSIONS } from '../data/sampleDataset';
 import { PatientFlowTrendsSection } from './PatientFlowTrendsSection';
 import { DashboardFilterBar, DashboardFilterState, INITIAL_FILTER_STATE } from './DashboardFilterBar';
 import { ApolloLogo } from './ApolloLogo';
+import { QUESTION_CHART_META } from './QuestionsGraphHub';
 
 interface DashboardOverviewProps {
   onSelectQuery: (questionNumber: number) => void;
@@ -340,12 +341,12 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
 
           <div className="flex flex-wrap gap-3">
             <button
-              id="btn-run-sql-lab"
-              onClick={() => onNavigateTab('sql-workbench')}
-              aria-label="Explore 15 SQL queries in SQL Lab"
+              id="btn-run-all-charts"
+              onClick={() => onNavigateTab('all-charts')}
+              aria-label="Explore 15 Analytical Visualizations"
               className="inline-flex items-center space-x-2 bg-sky-500 hover:bg-sky-400 text-slate-950 font-bold px-4 py-2.5 rounded-xl text-sm transition-all shadow-sm cursor-pointer focus-visible:ring-2 focus-visible:ring-sky-400 focus:outline-hidden"
             >
-              <span>Explore 15 SQL Queries</span>
+              <span>Explore 15 Analytical Charts</span>
               <ChevronRight className="w-4 h-4" />
             </button>
             <button
@@ -445,7 +446,7 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
               </div>
 
               <div className="pt-2 border-t border-slate-100 flex items-center justify-between text-[11px]">
-                <span className="text-slate-500 font-mono">SQL Logic: Query Q{alert.queryNum}</span>
+                <span className="text-slate-500 font-medium">Metric Source: Analysis Q{alert.queryNum}</span>
                 <button
                   onClick={() => onSelectQuery(alert.queryNum)}
                   className="font-bold text-sky-700 hover:underline flex items-center space-x-1 cursor-pointer"
@@ -585,6 +586,67 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
         externalFacility={currentTrendFacility}
         onFacilityChange={handleTrendFacilityChange}
       />
+
+      {/* ========================================================================= */}
+      {/* 15 QUESTIONS & 15 DISTINCT CHART TYPES INTERACTIVE BUTTON HUB             */}
+      {/* ========================================================================= */}
+      <div id="dashboard-15-questions-hub" className="bg-white rounded-2xl border border-slate-200 p-5 sm:p-6 shadow-xs space-y-4">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-slate-100">
+          <div>
+            <div className="flex items-center space-x-2">
+              <span className="p-1.5 rounded-lg bg-sky-100 text-sky-700">
+                <BarChart className="w-4 h-4" />
+              </span>
+              <h2 className="text-base sm:text-lg font-extrabold text-slate-900">
+                15 Analytical Questions & Multi-Chart Intelligence Hub
+              </h2>
+            </div>
+            <p className="text-xs text-slate-500 mt-0.5">
+              Click any question button below (Q1 - Q15) to inspect its dedicated, unique visualization type:
+            </p>
+          </div>
+
+          <button
+            id="btn-open-all-15-charts-gallery"
+            onClick={() => onNavigateTab('all-charts')}
+            className="flex items-center space-x-1.5 px-3.5 py-1.5 rounded-xl bg-slate-900 text-white hover:bg-slate-800 text-xs font-bold shadow-xs transition-all cursor-pointer self-start sm:self-auto shrink-0"
+          >
+            <span>Open 15-Chart Visualizer</span>
+            <ChevronRight className="w-3.5 h-3.5 text-sky-400" />
+          </button>
+        </div>
+
+        {/* 15 Question Buttons Grid with Chart Badges */}
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2.5">
+          {QUESTION_CHART_META.map((meta) => (
+            <button
+              key={meta.questionNumber}
+              id={`dashboard-btn-q${meta.questionNumber}`}
+              onClick={() => onSelectQuery(meta.questionNumber)}
+              aria-label={`Open Question ${meta.questionNumber}: ${meta.shortTitle} with ${meta.chartType}`}
+              className="text-left p-3 rounded-xl border border-slate-200/80 bg-slate-50/70 hover:bg-white hover:border-sky-400 hover:shadow-md transition-all cursor-pointer flex flex-col justify-between space-y-1.5 group"
+            >
+              <div className="flex items-center justify-between gap-1">
+                <span className="w-6 h-6 rounded-md bg-slate-900 text-white group-hover:bg-sky-600 flex items-center justify-center text-[10px] font-black transition-colors">
+                  Q{meta.questionNumber}
+                </span>
+                <span className={`text-[9px] font-extrabold uppercase tracking-wider px-1.5 py-0.5 rounded border truncate ${meta.badgeBg} ${meta.badgeText} ${meta.badgeBorder}`}>
+                  {meta.chartType.replace(' Chart', '')}
+                </span>
+              </div>
+
+              <div className="font-bold text-xs text-slate-900 group-hover:text-sky-700 transition-colors truncate">
+                {meta.shortTitle}
+              </div>
+
+              <div className="text-[10px] text-slate-500 truncate flex items-center justify-between">
+                <span>{meta.chartCategory}</span>
+                <ArrowUpRight className="w-3 h-3 text-slate-400 group-hover:text-sky-600 transition-colors" />
+              </div>
+            </button>
+          ))}
+        </div>
+      </div>
 
       {/* Hospital Metrics & Department Charts Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">

@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { 
   Search, 
-  Terminal, 
   Activity, 
   AlertTriangle, 
   BedDouble, 
@@ -9,11 +8,11 @@ import {
   Users, 
   X, 
   ArrowRight, 
-  Sparkles,
-  Building2,
-  Stethoscope,
-  Clock,
-  Code2
+  Sparkles, 
+  Building2, 
+  Stethoscope, 
+  Clock, 
+  BarChart3 
 } from 'lucide-react';
 import { SQL_QUESTIONS } from '../data/sqlQuestions';
 import { ActiveTab } from './Navbar';
@@ -24,13 +23,15 @@ interface CommandPaletteProps {
   onClose: () => void;
   onSelectTab: (tab: ActiveTab) => void;
   onSelectQuery: (questionNumber: number) => void;
+  onOpenInsights?: () => void;
 }
 
 export const CommandPalette: React.FC<CommandPaletteProps> = ({
   isOpen,
   onClose,
   onSelectTab,
-  onSelectQuery
+  onSelectQuery,
+  onOpenInsights
 }) => {
   const [search, setSearch] = useState('');
   const [selectedIndex, setSelectedIndex] = useState(0);
@@ -56,9 +57,10 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
 
   // Navigation Items
   const navigationItems = [
+    { id: 'insights', title: 'Executive Business Insights & ROI', subtitle: 'Cost reduction recommendations & clinical operational initiatives', icon: Sparkles, type: 'insights', badge: 'Executive' },
     { id: 'dashboard' as ActiveTab, title: 'Executive Dashboard', subtitle: 'Real-time patient intake & KPI trends', icon: Activity, type: 'view' },
-    { id: 'sql-workbench' as ActiveTab, title: 'SQL Query Lab', subtitle: 'Execute all 15 MySQL 8.0 queries with EXPLAIN plans', icon: Terminal, type: 'view' },
-    { id: 'bottlenecks' as ActiveTab, title: 'Bottleneck Analysis', subtitle: 'Composite percent_rank pressure rankings', icon: AlertTriangle, type: 'view' },
+    { id: 'all-charts' as ActiveTab, title: '15 Graphs Visualizer', subtitle: '15 distinct interactive charts for each analytical query', icon: BarChart3, type: 'view' },
+    { id: 'bottlenecks' as ActiveTab, title: 'Bottleneck Analysis', subtitle: 'Composite percent_rank pressure rankings (Q14)', icon: AlertTriangle, type: 'view' },
     { id: 'bed-tracker' as ActiveTab, title: 'Bed Occupancy Tracker', subtitle: 'Departmental bed census & capacity forecasting', icon: BedDouble, type: 'view' },
     { id: 'schema-er' as ActiveTab, title: 'Relational Schema & ERD', subtitle: '6-table normalized 3NF database model', icon: Database, type: 'view' },
     { id: 'data-browser' as ActiveTab, title: 'Patient Data Explorer', subtitle: 'Search and inspect 2,500 clinical admission records', icon: Users, type: 'view' }
@@ -74,9 +76,9 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
           id: q.questionNumber,
           title: `Q${q.questionNumber}: ${q.title}`,
           subtitle: q.businessContext || q.description,
-          icon: Code2,
+          icon: BarChart3,
           type: 'query',
-          category: 'Popular SQL Queries'
+          category: 'Analytical Visualizers'
         }))
       ];
     }
@@ -90,16 +92,15 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
         q.title.toLowerCase().includes(query) || 
         q.questionNumber.toString() === query ||
         (q.businessContext && q.businessContext.toLowerCase().includes(query)) ||
-        q.section.toLowerCase().includes(query) ||
-        q.sqlQuery.toLowerCase().includes(query)
+        q.section.toLowerCase().includes(query)
       )
       .map(q => ({
         id: q.questionNumber,
         title: `Q${q.questionNumber}: ${q.title}`,
         subtitle: q.businessContext || q.description,
-        icon: Code2,
+        icon: BarChart3,
         type: 'query',
-        category: 'SQL Analytical Queries'
+        category: 'Analytical Question Visualizers'
       }));
 
     return [...matchedNav, ...matchedQueries];
@@ -130,6 +131,8 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
       onSelectTab(item.id);
     } else if (item.type === 'query') {
       onSelectQuery(item.id);
+    } else if (item.type === 'insights' && onOpenInsights) {
+      onOpenInsights();
     }
     onClose();
   };

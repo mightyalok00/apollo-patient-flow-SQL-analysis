@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { 
   Activity, 
-  Terminal, 
   AlertTriangle, 
   MoreHorizontal,
   BedDouble, 
@@ -11,7 +10,9 @@ import {
   Gauge,
   X,
   ChevronRight,
-  ShieldAlert
+  ShieldAlert,
+  BarChart3,
+  Sparkles
 } from 'lucide-react';
 import { ActiveTab } from './Navbar';
 
@@ -20,20 +21,23 @@ interface MobileBottomNavProps {
   setActiveTab: (tab: ActiveTab) => void;
   onOpenCommandPalette: () => void;
   onOpenDiagnostics: () => void;
+  onOpenInsights?: () => void;
 }
 
 export const MobileBottomNav: React.FC<MobileBottomNavProps> = ({
   activeTab,
   setActiveTab,
   onOpenCommandPalette,
-  onOpenDiagnostics
+  onOpenDiagnostics,
+  onOpenInsights
 }) => {
   const [isMoreSheetOpen, setIsMoreSheetOpen] = useState(false);
 
   const mainTabs = [
     { id: 'dashboard' as ActiveTab, label: 'Overview', icon: Activity },
-    { id: 'sql-workbench' as ActiveTab, label: 'SQL Lab', icon: Terminal },
+    { id: 'all-charts' as ActiveTab, label: '15 Graphs', icon: BarChart3 },
     { id: 'bottlenecks' as ActiveTab, label: 'Bottlenecks', icon: AlertTriangle },
+    { id: 'bed-tracker' as ActiveTab, label: 'Beds', icon: BedDouble },
   ];
 
   const moreItems = [
@@ -48,7 +52,7 @@ export const MobileBottomNav: React.FC<MobileBottomNavProps> = ({
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  const isMoreActive = ['bed-tracker', 'schema-er', 'data-browser'].includes(activeTab);
+  const isMoreActive = ['schema-er', 'data-browser'].includes(activeTab);
 
   return (
     <>
@@ -136,6 +140,31 @@ export const MobileBottomNav: React.FC<MobileBottomNavProps> = ({
 
             {/* Navigation List */}
             <div className="space-y-2">
+              {onOpenInsights && (
+                <button
+                  onClick={() => {
+                    setIsMoreSheetOpen(false);
+                    onOpenInsights();
+                  }}
+                  aria-label="Open Business Insights & ROI Roadmap"
+                  className="w-full flex items-center justify-between p-3.5 rounded-2xl bg-gradient-to-r from-amber-500/20 via-orange-500/20 to-rose-500/20 border border-amber-500/40 text-left transition-all cursor-pointer"
+                >
+                  <div className="flex items-center space-x-3">
+                    <div className="p-2 rounded-xl bg-amber-400 text-slate-950">
+                      <Sparkles className="w-5 h-5" />
+                    </div>
+                    <div>
+                      <div className="text-xs font-black text-white flex items-center gap-1.5">
+                        <span>Executive Business Insights</span>
+                        <span className="text-[9px] px-1.5 py-0.2 bg-amber-400 text-slate-950 rounded font-black">ROI</span>
+                      </div>
+                      <div className="text-[11px] text-amber-200/80">Operational interventions & cost reduction roadmap</div>
+                    </div>
+                  </div>
+                  <ChevronRight className="w-4 h-4 text-amber-400" />
+                </button>
+              )}
+
               {moreItems.map((item) => {
                 const Icon = item.icon;
                 const isSelected = activeTab === item.id;

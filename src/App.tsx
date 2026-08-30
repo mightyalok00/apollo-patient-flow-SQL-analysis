@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Navbar, ActiveTab } from './components/Navbar';
 import { DashboardOverview } from './components/DashboardOverview';
-import { SqlWorkbench } from './components/SqlWorkbench';
+import { QuestionsGraphHub } from './components/QuestionsGraphHub';
 import { BottleneckAnalysis } from './components/BottleneckAnalysis';
 import { BedOccupancyTracker } from './components/BedOccupancyTracker';
 import { DatabaseSchemaExplorer } from './components/DatabaseSchemaExplorer';
@@ -10,17 +10,19 @@ import { CommandPalette } from './components/CommandPalette';
 import { ApolloLogo } from './components/ApolloLogo';
 import { MobileBottomNav } from './components/MobileBottomNav';
 import { SystemHealthDiagnosticsModal } from './components/SystemHealthDiagnosticsModal';
-import { Activity, ShieldAlert, HeartHandshake, Database, Terminal, FileCode2, ExternalLink } from 'lucide-react';
+import { BusinessInsightsModal } from './components/BusinessInsightsModal';
+import { Activity, ShieldAlert, HeartHandshake, Database, FileCode2, ExternalLink, Sparkles, Lightbulb } from 'lucide-react';
 
 export default function App() {
   const [activeTab, setActiveTab] = useState<ActiveTab>('dashboard');
   const [targetQuestionNumber, setTargetQuestionNumber] = useState<number>(1);
   const [isCommandPaletteOpen, setIsCommandPaletteOpen] = useState<boolean>(false);
   const [isDiagnosticsOpen, setIsDiagnosticsOpen] = useState<boolean>(false);
+  const [isInsightsOpen, setIsInsightsOpen] = useState<boolean>(false);
 
   const handleSelectQueryFromAnywhere = (questionNumber: number) => {
     setTargetQuestionNumber(questionNumber);
-    setActiveTab('sql-workbench');
+    setActiveTab('all-charts');
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
@@ -32,6 +34,7 @@ export default function App() {
         setActiveTab={setActiveTab} 
         onOpenCommandPalette={() => setIsCommandPaletteOpen(true)}
         onOpenDiagnostics={() => setIsDiagnosticsOpen(true)}
+        onOpenInsights={() => setIsInsightsOpen(true)}
         onSelectQuery={handleSelectQueryFromAnywhere}
       />
 
@@ -44,12 +47,20 @@ export default function App() {
           window.scrollTo({ top: 0, behavior: 'smooth' });
         }}
         onSelectQuery={handleSelectQueryFromAnywhere}
+        onOpenInsights={() => setIsInsightsOpen(true)}
       />
 
       {/* System Health & Efficiency Diagnostics Modal */}
       <SystemHealthDiagnosticsModal
         isOpen={isDiagnosticsOpen}
         onClose={() => setIsDiagnosticsOpen(false)}
+      />
+
+      {/* C-Suite Executive Business Insights Modal */}
+      <BusinessInsightsModal
+        isOpen={isInsightsOpen}
+        onClose={() => setIsInsightsOpen(false)}
+        onNavigateToChart={handleSelectQueryFromAnywhere}
       />
 
       {/* Main Content Area */}
@@ -61,9 +72,10 @@ export default function App() {
           />
         )}
 
-        {activeTab === 'sql-workbench' && (
-          <SqlWorkbench 
+        {activeTab === 'all-charts' && (
+          <QuestionsGraphHub 
             initialQuestionNumber={targetQuestionNumber}
+            onSelectQuestion={handleSelectQueryFromAnywhere}
           />
         )}
 
@@ -94,6 +106,7 @@ export default function App() {
         setActiveTab={setActiveTab}
         onOpenCommandPalette={() => setIsCommandPaletteOpen(true)}
         onOpenDiagnostics={() => setIsDiagnosticsOpen(true)}
+        onOpenInsights={() => setIsInsightsOpen(true)}
       />
 
       {/* Modern Executive Footer */}
@@ -147,12 +160,20 @@ export default function App() {
 
             <div className="space-y-2">
               <h4 className="font-bold text-white uppercase tracking-wider text-[11px]">Executive Verification</h4>
-              <div className="p-3 rounded-xl bg-slate-950 border border-slate-800 text-[11px] text-slate-400">
+              <div className="p-3.5 rounded-xl bg-slate-950 border border-slate-800 text-[11px] text-slate-400 space-y-2.5">
                 <div className="flex items-center space-x-1.5 text-emerald-400 font-semibold mb-1">
                   <span className="w-2 h-2 rounded-full bg-emerald-400"></span>
                   <span>100% Data Integrity Verified</span>
                 </div>
                 <p>2,500 admissions across 4 hospitals (Delhi, Mumbai, Bangalore, Hyderabad).</p>
+                <button
+                  id="btn-footer-business-insights"
+                  onClick={() => setIsInsightsOpen(true)}
+                  className="w-full flex items-center justify-center space-x-2 px-3 py-2 rounded-xl bg-gradient-to-r from-amber-500 via-orange-500 to-rose-500 text-slate-950 font-black text-xs hover:opacity-95 shadow-md shadow-amber-500/20 transition-all cursor-pointer active:scale-95"
+                >
+                  <Sparkles className="w-3.5 h-3.5 text-slate-950" />
+                  <span>Executive Business Insights</span>
+                </button>
               </div>
             </div>
           </div>
@@ -163,9 +184,17 @@ export default function App() {
             </div>
 
             <div className="flex items-center space-x-4">
+              <button
+                onClick={() => setIsInsightsOpen(true)}
+                className="text-amber-400 hover:text-amber-300 font-bold flex items-center space-x-1.5 transition-colors cursor-pointer"
+              >
+                <Lightbulb className="w-3.5 h-3.5 text-amber-400" />
+                <span>Business Insights</span>
+              </button>
+              <span>•</span>
               <span className="flex items-center text-slate-400">
                 <ShieldAlert className="w-3.5 h-3.5 mr-1 text-slate-400" />
-                <span>Synthetic Healthcare Dataset</span>
+                <span>Synthetic Dataset</span>
               </span>
               <span>•</span>
               <button 

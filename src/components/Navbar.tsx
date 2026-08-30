@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { 
   Activity, 
-  Terminal, 
   AlertTriangle, 
   BedDouble, 
   Database, 
@@ -12,17 +11,20 @@ import {
   Flame,
   ShieldCheck,
   Gauge,
-  Sparkles
+  Sparkles,
+  BarChart3,
+  Lightbulb
 } from 'lucide-react';
 import { ApolloLogo } from './ApolloLogo';
 
-export type ActiveTab = 'dashboard' | 'sql-workbench' | 'bottlenecks' | 'bed-tracker' | 'schema-er' | 'data-browser';
+export type ActiveTab = 'dashboard' | 'all-charts' | 'bottlenecks' | 'bed-tracker' | 'schema-er' | 'data-browser';
 
 interface NavbarProps {
   activeTab: ActiveTab;
   setActiveTab: (tab: ActiveTab) => void;
   onOpenCommandPalette: () => void;
   onOpenDiagnostics?: () => void;
+  onOpenInsights?: () => void;
   onSelectQuery?: (qNum: number) => void;
 }
 
@@ -31,13 +33,14 @@ export const Navbar: React.FC<NavbarProps> = ({
   setActiveTab, 
   onOpenCommandPalette,
   onOpenDiagnostics,
+  onOpenInsights,
   onSelectQuery
 }) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const navItems = [
     { id: 'dashboard' as ActiveTab, label: 'Executive Dashboard', icon: Activity, shortLabel: 'Overview' },
-    { id: 'sql-workbench' as ActiveTab, label: 'SQL Query Lab', icon: Terminal, badge: '15 Queries', shortLabel: 'SQL Lab' },
+    { id: 'all-charts' as ActiveTab, label: '15 Graphs Visualizer', icon: BarChart3, badge: '15 Charts', shortLabel: '15 Graphs' },
     { id: 'bottlenecks' as ActiveTab, label: 'Bottleneck Matrix', icon: AlertTriangle, badge: 'Q14 Index', shortLabel: 'Bottlenecks' },
     { id: 'bed-tracker' as ActiveTab, label: 'Bed Capacity Tracker', icon: BedDouble, shortLabel: 'Bed Census' },
     { id: 'schema-er' as ActiveTab, label: 'Schema & ER Diagram', icon: Database, shortLabel: 'Schema' },
@@ -92,6 +95,20 @@ export const Navbar: React.FC<NavbarProps> = ({
               <kbd className="hidden sm:inline-block bg-slate-900 px-1.5 py-0.5 rounded text-[10px] text-slate-400 border border-slate-700 font-mono">⌘K</kbd>
             </button>
 
+            {onOpenInsights && (
+              <button
+                id="btn-nav-business-insights"
+                onClick={onOpenInsights}
+                aria-label="Open Executive Business Insights & ROI Roadmap"
+                className="flex items-center space-x-1.5 bg-gradient-to-r from-amber-500/20 via-orange-500/20 to-rose-500/20 hover:from-amber-500/30 hover:to-rose-500/30 text-amber-300 border border-amber-500/40 px-2.5 sm:px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer shadow-xs focus-visible:ring-2 focus-visible:ring-amber-400 focus:outline-hidden active:scale-95"
+                title="Executive Business Insights & ROI Analysis"
+              >
+                <Sparkles className="w-3.5 h-3.5 text-amber-400" />
+                <span>Business Insights</span>
+                <span className="text-[9px] font-black uppercase px-1.5 py-0.2 rounded bg-amber-400 text-slate-950 hidden md:inline">ROI</span>
+              </button>
+            )}
+
             {onSelectQuery && (
               <button
                 onClick={() => onSelectQuery(14)}
@@ -126,50 +143,83 @@ export const Navbar: React.FC<NavbarProps> = ({
           </div>
         </div>
 
-        {/* Row 2: Desktop Navigation Bar */}
+        {/* Row 2: Desktop Navigation Bar Slider */}
         <nav 
           aria-label="Primary Navigation" 
-          className="hidden lg:flex space-x-1 overflow-x-auto py-2"
+          className="hidden lg:flex items-center justify-between space-x-1 overflow-x-auto py-2"
         >
-          {navItems.map((item) => {
-            const Icon = item.icon;
-            const isActive = activeTab === item.id;
-            return (
-              <button
-                key={item.id}
-                id={`nav-tab-${item.id}`}
-                onClick={() => setActiveTab(item.id)}
-                aria-current={isActive ? 'page' : undefined}
-                className={`flex items-center space-x-2 px-3.5 py-2 rounded-xl text-xs font-bold transition-all whitespace-nowrap cursor-pointer focus-visible:ring-2 focus-visible:ring-sky-400 focus:outline-hidden ${
-                  isActive
-                    ? 'bg-sky-500 text-slate-950 shadow-sm shadow-sky-500/30'
-                    : 'text-slate-300 hover:text-white hover:bg-slate-800/90'
-                }`}
-              >
-                <Icon className={`w-4 h-4 ${isActive ? 'text-slate-950' : 'text-slate-400'}`} />
-                <span>{item.label}</span>
-                {item.badge && (
-                  <span
-                    className={`text-[10px] px-1.5 py-0.5 rounded-md font-extrabold uppercase tracking-wider ${
-                      isActive
-                        ? 'bg-slate-900 text-sky-300'
-                        : item.badge === 'Q14 Index'
-                        ? 'bg-rose-500/20 text-rose-300 border border-rose-500/30'
-                        : 'bg-slate-800 text-slate-300 border border-slate-700'
-                    }`}
-                  >
-                    {item.badge}
-                  </span>
-                )}
-              </button>
-            );
-          })}
+          <div className="flex space-x-1 items-center">
+            {navItems.map((item) => {
+              const Icon = item.icon;
+              const isActive = activeTab === item.id;
+              return (
+                <button
+                  key={item.id}
+                  id={`nav-tab-${item.id}`}
+                  onClick={() => setActiveTab(item.id)}
+                  aria-current={isActive ? 'page' : undefined}
+                  className={`flex items-center space-x-2 px-3.5 py-2 rounded-xl text-xs font-bold transition-all whitespace-nowrap cursor-pointer focus-visible:ring-2 focus-visible:ring-sky-400 focus:outline-hidden ${
+                    isActive
+                      ? 'bg-sky-500 text-slate-950 shadow-sm shadow-sky-500/30'
+                      : 'text-slate-300 hover:text-white hover:bg-slate-800/90'
+                  }`}
+                >
+                  <Icon className={`w-4 h-4 ${isActive ? 'text-slate-950' : 'text-slate-400'}`} />
+                  <span>{item.label}</span>
+                  {item.badge && (
+                    <span
+                      className={`text-[10px] px-1.5 py-0.5 rounded-md font-extrabold uppercase tracking-wider ${
+                        isActive
+                          ? 'bg-slate-900 text-sky-300'
+                          : item.badge === 'Q14 Index'
+                          ? 'bg-rose-500/20 text-rose-300 border border-rose-500/30'
+                          : 'bg-slate-800 text-slate-300 border border-slate-700'
+                      }`}
+                    >
+                      {item.badge}
+                    </span>
+                  )}
+                </button>
+              );
+            })}
+          </div>
+
+          {onOpenInsights && (
+            <button
+              id="btn-slider-business-insights"
+              onClick={onOpenInsights}
+              className="flex items-center space-x-1.5 px-3 py-1.5 rounded-xl text-xs font-bold text-amber-300 bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/30 transition-all cursor-pointer shrink-0 ml-2 shadow-xs"
+              title="Executive Business Insights"
+            >
+              <Lightbulb className="w-3.5 h-3.5 text-amber-400" />
+              <span>Executive Business Insights</span>
+            </button>
+          )}
         </nav>
       </div>
 
       {/* Mobile Drawer */}
       {mobileMenuOpen && (
         <div className="lg:hidden bg-slate-900 border-t border-slate-800 px-4 pt-2 pb-4 space-y-1.5 animate-fadeIn">
+          {onOpenInsights && (
+            <button
+              id="btn-mobile-business-insights"
+              onClick={() => {
+                onOpenInsights();
+                setMobileMenuOpen(false);
+              }}
+              className="w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-bold text-amber-300 bg-gradient-to-r from-amber-500/20 via-orange-500/20 to-rose-500/20 hover:from-amber-500/30 hover:to-rose-500/30 border border-amber-500/40 transition-all cursor-pointer mb-2"
+            >
+              <div className="flex items-center space-x-2.5">
+                <Sparkles className="w-4 h-4 text-amber-400" />
+                <span>Executive Business Insights & ROI</span>
+              </div>
+              <span className="text-[10px] font-extrabold uppercase bg-amber-400 text-slate-950 px-2 py-0.5 rounded">
+                Executive
+              </span>
+            </button>
+          )}
+
           {navItems.map((item) => {
             const Icon = item.icon;
             const isActive = activeTab === item.id;
