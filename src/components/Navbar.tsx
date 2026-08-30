@@ -8,14 +8,15 @@ import {
   Search, 
   Menu, 
   X, 
-  Flame,
   ShieldCheck,
   Gauge,
   Sparkles,
   BarChart3,
-  Lightbulb
+  Lightbulb,
+  Info,
+  HelpCircle
 } from 'lucide-react';
-import { ApolloLogo } from './ApolloLogo';
+import { HealthcareLogo } from './ApolloLogo';
 
 export type ActiveTab = 'dashboard' | 'all-charts' | 'bottlenecks' | 'bed-tracker' | 'schema-er' | 'data-browser';
 
@@ -25,6 +26,7 @@ interface NavbarProps {
   onOpenCommandPalette: () => void;
   onOpenDiagnostics?: () => void;
   onOpenInsights?: () => void;
+  onOpenAbout?: () => void;
   onSelectQuery?: (qNum: number) => void;
 }
 
@@ -34,36 +36,38 @@ export const Navbar: React.FC<NavbarProps> = ({
   onOpenCommandPalette,
   onOpenDiagnostics,
   onOpenInsights,
+  onOpenAbout,
   onSelectQuery
 }) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const navItems = [
-    { id: 'dashboard' as ActiveTab, label: 'Executive Dashboard', icon: Activity, shortLabel: 'Overview' },
-    { id: 'all-charts' as ActiveTab, label: '15 Graphs Visualizer', icon: BarChart3, badge: '15 Charts', shortLabel: '15 Graphs' },
-    { id: 'bottlenecks' as ActiveTab, label: 'Bottleneck Matrix', icon: AlertTriangle, badge: 'Q14 Index', shortLabel: 'Bottlenecks' },
+    { id: 'dashboard' as ActiveTab, label: 'Overview & Problem Triad', icon: Activity, shortLabel: 'Overview' },
+    { id: 'all-charts' as ActiveTab, label: '15 SQL Visualizers', icon: BarChart3, badge: '15 Charts', shortLabel: '15 SQL' },
+    { id: 'bottlenecks' as ActiveTab, label: 'Bottleneck Matrix', icon: AlertTriangle, badge: 'Q14 Rank', shortLabel: 'Bottlenecks' },
     { id: 'bed-tracker' as ActiveTab, label: 'Bed Capacity Tracker', icon: BedDouble, shortLabel: 'Bed Census' },
-    { id: 'schema-er' as ActiveTab, label: 'Schema & ER Diagram', icon: Database, shortLabel: 'Schema' },
-    { id: 'data-browser' as ActiveTab, label: 'Patient Records', icon: Users, badge: '2.5k Recs', shortLabel: 'Records' },
+    { id: 'schema-er' as ActiveTab, label: 'Data Model & ERD', icon: Database, shortLabel: 'Schema' },
+    { id: 'data-browser' as ActiveTab, label: 'Patient Records Explorer', icon: Users, badge: '2,500 Recs', shortLabel: 'Records' },
   ];
 
   return (
     <header className="bg-slate-900 border-b border-slate-800 text-white sticky top-0 z-40 shadow-md">
       {/* Row 1: Brand, Telemetry & Global Actions */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-14 border-b border-slate-800/80">
-          {/* Brand Logo & Identifier */}
+          
+          {/* Brand Logo & Author Attribution */}
           <div className="flex items-center space-x-3">
             <button
               onClick={() => setActiveTab('dashboard')}
-              aria-label="Apollo Hospitals Analytics Dashboard Home"
-              className="flex items-center space-x-2.5 focus-visible:ring-2 focus-visible:ring-sky-400 focus:outline-hidden rounded-lg cursor-pointer text-left"
+              aria-label="Healthcare Patient Flow SQL Analytics Home"
+              className="flex items-center space-x-2.5 focus-visible:ring-2 focus-visible:ring-sky-400 focus:outline-hidden rounded-xl cursor-pointer text-left py-1"
             >
-              <ApolloLogo size="sm" variant="horizontal" theme="dark" />
+              <HealthcareLogo size="sm" variant="horizontal" theme="dark" />
             </button>
-            <div className="hidden sm:flex items-center space-x-2 pl-2 border-l border-slate-700/80">
+            <div className="hidden sm:flex items-center space-x-2 pl-2.5 border-l border-slate-700/80">
               <span className="text-[10px] font-bold px-2 py-0.5 rounded-md bg-sky-500/20 text-sky-300 border border-sky-400/30">
-                SQL Intelligence
+                SQL Analytics
               </span>
               <span className="text-[10px] text-slate-400 hidden md:inline">
                 by <strong className="text-slate-200 font-semibold">Alok Agarwal</strong>
@@ -75,26 +79,29 @@ export const Navbar: React.FC<NavbarProps> = ({
           <div className="hidden xl:flex items-center space-x-3 text-[11px] text-slate-400">
             <span className="flex items-center space-x-1.5 text-emerald-400 font-semibold">
               <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-              <span>MySQL 8.0 Engine Active</span>
+              <span>MySQL 8.0 Validated</span>
             </span>
             <span className="text-slate-700">•</span>
-            <span className="text-slate-300">4 Facilities (Delhi, Mumbai, BLR, HYD)</span>
+            <span className="text-slate-300">4 Metro Hospitals (20 Departments)</span>
             <span className="text-slate-700">•</span>
-            <span className="text-sky-300 font-mono font-medium">2,500 Verified Episodes</span>
+            <span className="text-sky-300 font-mono font-medium">2,500 Patient Episodes</span>
           </div>
 
           {/* Right Quick Actions */}
-          <div className="flex items-center space-x-2">
+          <div className="flex items-center space-x-1.5 sm:space-x-2">
+            
+            {/* Quick Search */}
             <button
               onClick={onOpenCommandPalette}
               aria-label="Open Command Palette Search (Cmd+K)"
               className="flex items-center space-x-2 bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white px-2.5 sm:px-3 py-1.5 rounded-xl border border-slate-700 text-xs transition-all cursor-pointer focus-visible:ring-2 focus-visible:ring-sky-400 focus:outline-hidden"
             >
               <Search className="w-3.5 h-3.5 text-sky-400 shrink-0" />
-              <span className="hidden sm:inline text-xs text-slate-300">Quick Search...</span>
+              <span className="hidden sm:inline text-xs text-slate-300">Search...</span>
               <kbd className="hidden sm:inline-block bg-slate-900 px-1.5 py-0.5 rounded text-[10px] text-slate-400 border border-slate-700 font-mono">⌘K</kbd>
             </button>
 
+            {/* Business Insights Trigger */}
             {onOpenInsights && (
               <button
                 id="btn-nav-business-insights"
@@ -103,43 +110,51 @@ export const Navbar: React.FC<NavbarProps> = ({
                 className="flex items-center space-x-1.5 bg-gradient-to-r from-amber-500/20 via-orange-500/20 to-rose-500/20 hover:from-amber-500/30 hover:to-rose-500/30 text-amber-300 border border-amber-500/40 px-2.5 sm:px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer shadow-xs focus-visible:ring-2 focus-visible:ring-amber-400 focus:outline-hidden active:scale-95"
                 title="Executive Business Insights & ROI Analysis"
               >
-                <Sparkles className="w-3.5 h-3.5 text-amber-400" />
-                <span>Business Insights</span>
-                <span className="text-[9px] font-black uppercase px-1.5 py-0.2 rounded bg-amber-400 text-slate-950 hidden md:inline">ROI</span>
+                <Sparkles className="w-3.5 h-3.5 text-amber-400 shrink-0" />
+                <span className="hidden md:inline">Business Insights</span>
+                <span className="md:hidden">Insights</span>
+                <span className="text-[9px] font-black uppercase px-1.5 py-0.2 rounded bg-amber-400 text-slate-950 hidden sm:inline">ROI</span>
               </button>
             )}
 
-            {onSelectQuery && (
+            {/* About Project Trigger */}
+            {onOpenAbout && (
               <button
-                onClick={() => onSelectQuery(14)}
-                aria-label="Open Query 14 Composite Bottleneck Score"
-                className="hidden md:flex items-center space-x-1.5 bg-gradient-to-r from-amber-500/20 to-rose-500/20 hover:from-amber-500/30 hover:to-rose-500/30 text-amber-300 border border-amber-500/40 px-2.5 py-1.5 rounded-xl text-xs font-semibold transition-all cursor-pointer focus-visible:ring-2 focus-visible:ring-amber-400 focus:outline-hidden"
+                id="btn-nav-about"
+                onClick={onOpenAbout}
+                aria-label="Open About This Project and Methodology modal"
+                className="hidden lg:flex items-center space-x-1.5 bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white px-2.5 py-1.5 rounded-xl border border-slate-700 text-xs font-semibold transition-all cursor-pointer focus-visible:ring-2 focus-visible:ring-sky-400 focus:outline-hidden"
               >
-                <Flame className="w-3.5 h-3.5 text-amber-400" />
-                <span>Q14 Matrix</span>
+                <Info className="w-3.5 h-3.5 text-sky-400" />
+                <span>About</span>
               </button>
             )}
 
+            {/* Diagnostics Modal Trigger */}
             {onOpenDiagnostics && (
               <button
+                id="btn-nav-diagnostics"
                 onClick={onOpenDiagnostics}
-                aria-label="Open System Health & Diagnostic Telemetry"
-                className="hidden sm:flex items-center space-x-1.5 bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 px-2.5 py-1.5 rounded-xl text-xs font-semibold transition-all cursor-pointer focus-visible:ring-2 focus-visible:ring-emerald-400 focus:outline-hidden"
-                title="System Health & Diagnostics"
+                aria-label="Open System Health & Diagnostic Suite"
+                className="p-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white border border-slate-700 transition-all cursor-pointer focus-visible:ring-2 focus-visible:ring-sky-400 focus:outline-hidden"
+                title="System Health & Diagnostic Suite"
               >
-                <Gauge className="w-3.5 h-3.5 text-emerald-400" />
-                <span>Diagnostics</span>
+                <Gauge className="w-4 h-4 text-emerald-400" />
               </button>
             )}
 
-            {/* Mobile Drawer Menu Toggle */}
-            <button
-              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              aria-label={mobileMenuOpen ? "Close navigation menu" : "Open navigation menu"}
-              className="lg:hidden p-2 rounded-xl bg-slate-800 text-slate-300 hover:text-white focus-visible:ring-2 focus-visible:ring-sky-400 focus:outline-hidden cursor-pointer"
-            >
-              {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
-            </button>
+            {/* Mobile Hamburger Button */}
+            <div className="lg:hidden">
+              <button
+                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+                aria-label={mobileMenuOpen ? 'Close Navigation Menu' : 'Open Navigation Menu'}
+                aria-expanded={mobileMenuOpen}
+                className="p-2 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800 focus-visible:ring-2 focus-visible:ring-sky-400 focus:outline-hidden cursor-pointer"
+              >
+                {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+              </button>
+            </div>
+
           </div>
         </div>
 
@@ -160,7 +175,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                   aria-current={isActive ? 'page' : undefined}
                   className={`flex items-center space-x-2 px-3.5 py-2 rounded-xl text-xs font-bold transition-all whitespace-nowrap cursor-pointer focus-visible:ring-2 focus-visible:ring-sky-400 focus:outline-hidden ${
                     isActive
-                      ? 'bg-sky-500 text-slate-950 shadow-sm shadow-sky-500/30'
+                      ? 'bg-sky-500 text-slate-950 shadow-sm shadow-sky-500/30 font-extrabold'
                       : 'text-slate-300 hover:text-white hover:bg-slate-800/90'
                   }`}
                 >
@@ -171,7 +186,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                       className={`text-[10px] px-1.5 py-0.5 rounded-md font-extrabold uppercase tracking-wider ${
                         isActive
                           ? 'bg-slate-900 text-sky-300'
-                          : item.badge === 'Q14 Index'
+                          : item.badge === 'Q14 Rank'
                           ? 'bg-rose-500/20 text-rose-300 border border-rose-500/30'
                           : 'bg-slate-800 text-slate-300 border border-slate-700'
                       }`}
@@ -184,23 +199,24 @@ export const Navbar: React.FC<NavbarProps> = ({
             })}
           </div>
 
-          {onOpenInsights && (
-            <button
-              id="btn-slider-business-insights"
-              onClick={onOpenInsights}
-              className="flex items-center space-x-1.5 px-3 py-1.5 rounded-xl text-xs font-bold text-amber-300 bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/30 transition-all cursor-pointer shrink-0 ml-2 shadow-xs"
-              title="Executive Business Insights"
-            >
-              <Lightbulb className="w-3.5 h-3.5 text-amber-400" />
-              <span>Executive Business Insights</span>
-            </button>
-          )}
+          <div className="flex items-center space-x-2">
+            {onOpenAbout && (
+              <button
+                onClick={onOpenAbout}
+                className="flex items-center space-x-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold text-slate-300 hover:text-white bg-slate-800/80 hover:bg-slate-800 border border-slate-700 transition-all cursor-pointer shrink-0"
+              >
+                <HelpCircle className="w-3.5 h-3.5 text-sky-400" />
+                <span>Methodology</span>
+              </button>
+            )}
+          </div>
         </nav>
       </div>
 
-      {/* Mobile Drawer */}
+      {/* Mobile Drawer Menu */}
       {mobileMenuOpen && (
         <div className="lg:hidden bg-slate-900 border-t border-slate-800 px-4 pt-2 pb-4 space-y-1.5 animate-fadeIn">
+          
           {onOpenInsights && (
             <button
               id="btn-mobile-business-insights"
@@ -230,16 +246,21 @@ export const Navbar: React.FC<NavbarProps> = ({
                   setActiveTab(item.id);
                   setMobileMenuOpen(false);
                 }}
-                className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
-                  isActive ? 'bg-sky-500 text-slate-950' : 'text-slate-300 hover:bg-slate-800'
+                aria-current={isActive ? 'page' : undefined}
+                className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-semibold transition-all cursor-pointer ${
+                  isActive
+                    ? 'bg-sky-500 text-slate-950 font-bold'
+                    : 'text-slate-300 hover:text-white hover:bg-slate-800'
                 }`}
               >
                 <div className="flex items-center space-x-3">
-                  <Icon className="w-4 h-4" />
+                  <Icon className={`w-4 h-4 ${isActive ? 'text-slate-950' : 'text-slate-400'}`} />
                   <span>{item.label}</span>
                 </div>
                 {item.badge && (
-                  <span className={`text-[10px] px-1.5 py-0.5 rounded-md ${isActive ? 'bg-slate-900 text-sky-300' : 'bg-slate-800 text-slate-400'}`}>
+                  <span className={`text-[10px] px-1.5 py-0.5 rounded font-extrabold uppercase ${
+                    isActive ? 'bg-slate-900 text-sky-300' : 'bg-slate-800 text-slate-400'
+                  }`}>
                     {item.badge}
                   </span>
                 )}
@@ -247,30 +268,20 @@ export const Navbar: React.FC<NavbarProps> = ({
             );
           })}
 
-          {onOpenDiagnostics && (
+          {onOpenAbout && (
             <button
               onClick={() => {
-                onOpenDiagnostics();
+                onOpenAbout();
                 setMobileMenuOpen(false);
               }}
-              className="w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-bold text-emerald-400 bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-500/30 transition-all mt-2 cursor-pointer"
+              className="w-full flex items-center space-x-3 px-3.5 py-2.5 rounded-xl text-xs font-semibold text-slate-300 hover:text-white hover:bg-slate-800 transition-all cursor-pointer mt-2 border-t border-slate-800 pt-3"
             >
-              <div className="flex items-center space-x-2.5">
-                <Gauge className="w-4 h-4" />
-                <span>System Health & Diagnostics</span>
-              </div>
-              <span className="text-[10px] font-mono font-bold bg-emerald-500/20 px-2 py-0.5 rounded">
-                ⚡ 1.8ms
-              </span>
+              <Info className="w-4 h-4 text-sky-400" />
+              <span>About This Project & Schema</span>
             </button>
           )}
-
-          <div className="pt-2 text-[11px] text-slate-400 border-t border-slate-800 text-center">
-            Portfolio demonstration • Synthetic healthcare dataset
-          </div>
         </div>
       )}
     </header>
   );
 };
-

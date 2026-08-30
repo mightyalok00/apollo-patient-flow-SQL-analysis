@@ -7,11 +7,13 @@ import { BedOccupancyTracker } from './components/BedOccupancyTracker';
 import { DatabaseSchemaExplorer } from './components/DatabaseSchemaExplorer';
 import { PatientAdmissionsBrowser } from './components/PatientAdmissionsBrowser';
 import { CommandPalette } from './components/CommandPalette';
-import { ApolloLogo } from './components/ApolloLogo';
+import { HealthcareLogo } from './components/ApolloLogo';
 import { MobileBottomNav } from './components/MobileBottomNav';
 import { SystemHealthDiagnosticsModal } from './components/SystemHealthDiagnosticsModal';
 import { BusinessInsightsModal } from './components/BusinessInsightsModal';
-import { Activity, ShieldAlert, HeartHandshake, Database, FileCode2, ExternalLink, Sparkles, Lightbulb } from 'lucide-react';
+import { AboutProjectModal } from './components/AboutProjectModal';
+import { INDEPENDENT_DISCLAIMER } from './data/metricsEngine';
+import { Activity, ShieldAlert, HeartHandshake, Database, FileCode2, ExternalLink, Sparkles, Lightbulb, Info } from 'lucide-react';
 
 export default function App() {
   const [activeTab, setActiveTab] = useState<ActiveTab>('dashboard');
@@ -19,6 +21,7 @@ export default function App() {
   const [isCommandPaletteOpen, setIsCommandPaletteOpen] = useState<boolean>(false);
   const [isDiagnosticsOpen, setIsDiagnosticsOpen] = useState<boolean>(false);
   const [isInsightsOpen, setIsInsightsOpen] = useState<boolean>(false);
+  const [isAboutOpen, setIsAboutOpen] = useState<boolean>(false);
 
   const handleSelectQueryFromAnywhere = (questionNumber: number) => {
     setTargetQuestionNumber(questionNumber);
@@ -27,7 +30,7 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-100 text-slate-900 flex flex-col font-sans antialiased selection:bg-sky-500 selection:text-white pb-20 lg:pb-0">
+    <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col font-sans antialiased selection:bg-sky-500 selection:text-slate-950 pb-20 lg:pb-0">
       {/* Top Navbar with Modern Telemetry & Command Palette Trigger */}
       <Navbar 
         activeTab={activeTab} 
@@ -35,6 +38,7 @@ export default function App() {
         onOpenCommandPalette={() => setIsCommandPaletteOpen(true)}
         onOpenDiagnostics={() => setIsDiagnosticsOpen(true)}
         onOpenInsights={() => setIsInsightsOpen(true)}
+        onOpenAbout={() => setIsAboutOpen(true)}
         onSelectQuery={handleSelectQueryFromAnywhere}
       />
 
@@ -56,19 +60,27 @@ export default function App() {
         onClose={() => setIsDiagnosticsOpen(false)}
       />
 
-      {/* C-Suite Executive Business Insights Modal */}
+      {/* Executive Business Insights & Modeled ROI Modal */}
       <BusinessInsightsModal
         isOpen={isInsightsOpen}
         onClose={() => setIsInsightsOpen(false)}
         onNavigateToChart={handleSelectQueryFromAnywhere}
       />
 
+      {/* About Project & Methodology Modal */}
+      <AboutProjectModal
+        isOpen={isAboutOpen}
+        onClose={() => setIsAboutOpen(false)}
+      />
+
       {/* Main Content Area */}
-      <main className="flex-1 max-w-7xl w-full mx-auto px-3 sm:px-6 lg:px-8 pt-4 sm:pt-8">
+      <main className="flex-1 max-w-7xl w-full mx-auto px-3 sm:px-6 lg:px-8 pt-4 sm:pt-6">
         {activeTab === 'dashboard' && (
           <DashboardOverview 
             onSelectQuery={handleSelectQueryFromAnywhere}
             onNavigateTab={setActiveTab}
+            onOpenInsights={() => setIsInsightsOpen(true)}
+            onOpenAbout={() => setIsAboutOpen(true)}
           />
         )}
 
@@ -100,87 +112,97 @@ export default function App() {
         )}
       </main>
 
-      {/* Mobile Bottom Navigation Bar for iOS & Android (Thumb-friendly) */}
+      {/* Mobile Bottom Navigation Bar */}
       <MobileBottomNav
         activeTab={activeTab}
         setActiveTab={setActiveTab}
         onOpenCommandPalette={() => setIsCommandPaletteOpen(true)}
         onOpenDiagnostics={() => setIsDiagnosticsOpen(true)}
         onOpenInsights={() => setIsInsightsOpen(true)}
+        onOpenAbout={() => setIsAboutOpen(true)}
       />
 
-      {/* Modern Executive Footer */}
-      <footer className="bg-slate-900 text-slate-400 border-t border-slate-800 py-8 mt-16">
+      {/* Executive Portfolio Footer */}
+      <footer className="bg-slate-900/90 text-slate-400 border-t border-slate-800 py-8 mt-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8 pb-8 border-b border-slate-800 text-xs">
             <div className="space-y-3">
               <div className="mb-2">
-                <ApolloLogo size="md" variant="full" theme="dark" />
+                <HealthcareLogo size="md" variant="full" theme="dark" />
               </div>
-              <p className="text-slate-400 leading-relaxed">
-                Hospital analytical engine modeling 2,500 patient episodes, wait-time bottlenecks, length of stay, and bed utilization across 4 Apollo facilities.
+              <p className="text-slate-400 leading-relaxed text-[11px]">
+                Executive clinical intelligence platform modeling 2,500 patient episodes, wait-time bottlenecks, length of stay, and bed utilization across 4 regional hospital facilities.
               </p>
             </div>
 
             <div className="space-y-2">
-              <h4 className="font-bold text-white uppercase tracking-wider text-[11px]">Relational Architecture</h4>
-              <ul className="space-y-1 text-slate-400">
+              <h4 className="font-black text-white uppercase tracking-wider text-[11px]">Relational Architecture</h4>
+              <ul className="space-y-1 text-slate-400 text-[11px]">
                 <li>• 6 Normalized 3NF Tables</li>
                 <li>• MySQL 8.0+ Window Functions</li>
-                <li>• CTEs, Percentile Ranks & Rolling Averages</li>
+                <li>• CTEs, Percentiles & Rolling Averages</li>
                 <li>• Indexed Foreign Key Constraints</li>
               </ul>
             </div>
 
             <div className="space-y-2">
-              <h4 className="font-bold text-white uppercase tracking-wider text-[11px]">Key SQL Queries</h4>
-              <ul className="space-y-1 text-slate-400">
+              <h4 className="font-black text-white uppercase tracking-wider text-[11px]">Key SQL Queries</h4>
+              <ul className="space-y-1 text-slate-400 text-[11px]">
                 <li>
-                  <button onClick={() => handleSelectQueryFromAnywhere(1)} className="hover:text-sky-400 transition-colors">
+                  <button onClick={() => handleSelectQueryFromAnywhere(1)} className="hover:text-sky-400 transition-colors cursor-pointer">
                     Q1: Daily Admissions & 7D Avg
                   </button>
                 </li>
                 <li>
-                  <button onClick={() => handleSelectQueryFromAnywhere(4)} className="hover:text-sky-400 transition-colors">
+                  <button onClick={() => handleSelectQueryFromAnywhere(4)} className="hover:text-sky-400 transition-colors cursor-pointer">
                     Q4: Triage Latency & Severity
                   </button>
                 </li>
                 <li>
-                  <button onClick={() => handleSelectQueryFromAnywhere(14)} className="hover:text-sky-400 transition-colors">
+                  <button onClick={() => handleSelectQueryFromAnywhere(14)} className="hover:text-sky-400 transition-colors cursor-pointer">
                     Q14: Composite Bottleneck Matrix
                   </button>
                 </li>
                 <li>
-                  <button onClick={() => handleSelectQueryFromAnywhere(15)} className="hover:text-sky-400 transition-colors">
-                    Q15: EXPLAIN Plan & Query Tuning
+                  <button onClick={() => handleSelectQueryFromAnywhere(15)} className="hover:text-sky-400 transition-colors cursor-pointer">
+                    Q15: EXPLAIN Plan & Tuning
                   </button>
                 </li>
               </ul>
             </div>
 
             <div className="space-y-2">
-              <h4 className="font-bold text-white uppercase tracking-wider text-[11px]">Executive Verification</h4>
-              <div className="p-3.5 rounded-xl bg-slate-950 border border-slate-800 text-[11px] text-slate-400 space-y-2.5">
+              <h4 className="font-black text-white uppercase tracking-wider text-[11px]">Portfolio Actions</h4>
+              <div className="p-3.5 rounded-2xl bg-slate-950 border border-slate-800 text-[11px] text-slate-400 space-y-2.5">
                 <div className="flex items-center space-x-1.5 text-emerald-400 font-semibold mb-1">
                   <span className="w-2 h-2 rounded-full bg-emerald-400"></span>
                   <span>100% Data Integrity Verified</span>
                 </div>
                 <p>2,500 admissions across 4 hospitals (Delhi, Mumbai, Bangalore, Hyderabad).</p>
-                <button
-                  id="btn-footer-business-insights"
-                  onClick={() => setIsInsightsOpen(true)}
-                  className="w-full flex items-center justify-center space-x-2 px-3 py-2 rounded-xl bg-gradient-to-r from-amber-500 via-orange-500 to-rose-500 text-slate-950 font-black text-xs hover:opacity-95 shadow-md shadow-amber-500/20 transition-all cursor-pointer active:scale-95"
-                >
-                  <Sparkles className="w-3.5 h-3.5 text-slate-950" />
-                  <span>Executive Business Insights</span>
-                </button>
+                <div className="flex flex-col space-y-2">
+                  <button
+                    id="btn-footer-business-insights"
+                    onClick={() => setIsInsightsOpen(true)}
+                    className="w-full flex items-center justify-center space-x-2 px-3 py-2 rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 text-slate-950 font-black text-xs hover:opacity-95 shadow-md shadow-amber-500/20 transition-all cursor-pointer"
+                  >
+                    <Sparkles className="w-3.5 h-3.5 text-slate-950" />
+                    <span>Executive Business Insights</span>
+                  </button>
+                  <button
+                    onClick={() => setIsAboutOpen(true)}
+                    className="w-full flex items-center justify-center space-x-1.5 px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold text-xs transition-colors cursor-pointer"
+                  >
+                    <Info className="w-3.5 h-3.5 text-sky-400" />
+                    <span>About Project & Methods</span>
+                  </button>
+                </div>
               </div>
             </div>
           </div>
 
-          <div className="flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-500">
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-400">
             <div className="flex items-center space-x-2">
-              <span>Apollo Hospitals Patient Flow SQL Analytics • Developed by <strong className="text-slate-300 font-bold">Alok Agarwal</strong></span>
+              <span>Healthcare Patient Flow SQL Analytics • Developed by <strong className="text-slate-200 font-bold">Alok Agarwal</strong></span>
             </div>
 
             <div className="flex items-center space-x-4">
@@ -189,19 +211,21 @@ export default function App() {
                 className="text-amber-400 hover:text-amber-300 font-bold flex items-center space-x-1.5 transition-colors cursor-pointer"
               >
                 <Lightbulb className="w-3.5 h-3.5 text-amber-400" />
-                <span>Business Insights</span>
+                <span>10 Business Insights</span>
               </button>
               <span>•</span>
-              <span className="flex items-center text-slate-400">
-                <ShieldAlert className="w-3.5 h-3.5 mr-1 text-slate-400" />
-                <span>Synthetic Dataset</span>
-              </span>
+              <button
+                onClick={() => setIsAboutOpen(true)}
+                className="text-sky-400 hover:text-sky-300 font-semibold flex items-center space-x-1 transition-colors cursor-pointer"
+              >
+                <span>About Methodology</span>
+              </button>
               <span>•</span>
               <button 
                 onClick={() => setIsCommandPaletteOpen(true)}
-                className="text-sky-400 hover:text-sky-300 font-semibold"
+                className="text-slate-400 hover:text-slate-200 font-semibold cursor-pointer"
               >
-                Press ⌘K to Search
+                Press ⌘K
               </button>
             </div>
           </div>

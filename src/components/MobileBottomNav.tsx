@@ -22,6 +22,7 @@ interface MobileBottomNavProps {
   onOpenCommandPalette: () => void;
   onOpenDiagnostics: () => void;
   onOpenInsights?: () => void;
+  onOpenAbout?: () => void;
 }
 
 export const MobileBottomNav: React.FC<MobileBottomNavProps> = ({
@@ -29,7 +30,8 @@ export const MobileBottomNav: React.FC<MobileBottomNavProps> = ({
   setActiveTab,
   onOpenCommandPalette,
   onOpenDiagnostics,
-  onOpenInsights
+  onOpenInsights,
+  onOpenAbout
 }) => {
   const [isMoreSheetOpen, setIsMoreSheetOpen] = useState(false);
 
@@ -162,6 +164,28 @@ export const MobileBottomNav: React.FC<MobileBottomNavProps> = ({
                     </div>
                   </div>
                   <ChevronRight className="w-4 h-4 text-amber-400" />
+                </button>
+              )}
+
+              {onOpenAbout && (
+                <button
+                  onClick={() => {
+                    setIsMoreSheetOpen(false);
+                    onOpenAbout();
+                  }}
+                  aria-label="Open About This Project and Methodology"
+                  className="w-full flex items-center justify-between p-3 rounded-2xl border border-slate-700/60 bg-slate-800/80 text-slate-200 hover:bg-slate-800 text-left transition-all cursor-pointer"
+                >
+                  <div className="flex items-center space-x-3">
+                    <div className="p-2 rounded-xl bg-slate-700 text-sky-400">
+                      <Gauge className="w-5 h-5" />
+                    </div>
+                    <div>
+                      <div className="text-xs font-bold">About This Project</div>
+                      <div className="text-[11px] text-slate-400">Portfolio architecture, SQL techniques & credits</div>
+                    </div>
+                  </div>
+                  <ChevronRight className="w-4 h-4 text-slate-500" />
                 </button>
               )}
 

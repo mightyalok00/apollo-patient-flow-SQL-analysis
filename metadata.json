@@ -1,6 +1,6 @@
 {
-  "name": "Apollo Hospitals Patient Flow Analysis",
-  "description": "Interactive SQL analytics and patient flow performance platform for Apollo Hospitals, featuring real-time query execution, hospital & department operational metrics, bottleneck analysis, and ER diagram explorer.",
+  "name": "Healthcare Patient Flow SQL Analytics",
+  "description": "Portfolio healthcare analytics platform modeling patient flow, capacity bottlenecks, and clinical operations across 4 regional hospitals using 15 SQL analyses, CTE optimizations, and interactive statistical visualizations.",
   "requestFramePermissions": [],
   "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
 }

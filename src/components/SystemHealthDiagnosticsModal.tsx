@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { 
   Activity, 
   Cpu, 
@@ -20,7 +20,7 @@ import {
 import { SQL_QUESTIONS } from '../data/sqlQuestions';
 import { executePredefinedQuery } from '../data/sqlRunner';
 import { SAMPLE_ADMISSIONS, SAMPLE_PATIENTS, SAMPLE_BED_OCCUPANCY } from '../data/sampleDataset';
-import { ApolloLogo } from './ApolloLogo';
+import { HealthcareLogo } from './ApolloLogo';
 
 interface SystemHealthDiagnosticsModalProps {
   isOpen: boolean;
@@ -59,6 +59,8 @@ export const SystemHealthDiagnosticsModal: React.FC<SystemHealthDiagnosticsModal
     userAgent: ''
   });
 
+  const modalRef = useRef<HTMLDivElement>(null);
+
   const runDiagnostics = () => {
     setIsRunningBenchmark(true);
     const results: QueryBenchmarkResult[] = [];
@@ -92,6 +94,16 @@ export const SystemHealthDiagnosticsModal: React.FC<SystemHealthDiagnosticsModal
   };
 
   useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && isOpen) {
+        onClose();
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isOpen, onClose]);
+
+  useEffect(() => {
     if (typeof window !== 'undefined') {
       const ua = navigator.userAgent;
       const isIOS = /iPad|iPhone|iPod/.test(ua);
@@ -116,8 +128,16 @@ export const SystemHealthDiagnosticsModal: React.FC<SystemHealthDiagnosticsModal
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 overflow-y-auto bg-slate-950/80 backdrop-blur-xs flex items-center justify-center p-3 sm:p-6 animate-in fade-in duration-200">
-      <div className="relative bg-slate-900 border border-slate-700/80 text-white rounded-3xl w-full max-w-4xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
+    <div 
+      className="fixed inset-0 z-50 overflow-y-auto bg-slate-950/85 backdrop-blur-sm flex items-center justify-center p-3 sm:p-6 animate-fadeIn"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="diagnostics-modal-title"
+    >
+      <div 
+        ref={modalRef}
+        className="relative bg-slate-900 border border-slate-700/80 text-white rounded-3xl w-full max-w-4xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh]"
+      >
         {/* Modal Header */}
         <div className="p-5 sm:p-6 bg-gradient-to-r from-slate-950 via-slate-900 to-sky-950 border-b border-slate-800 flex items-center justify-between">
           <div className="flex items-center space-x-3">
@@ -126,8 +146,8 @@ export const SystemHealthDiagnosticsModal: React.FC<SystemHealthDiagnosticsModal
             </div>
             <div>
               <div className="flex items-center space-x-2">
-                <h2 className="text-base sm:text-lg font-extrabold text-white tracking-tight">
-                  System Health & Efficiency Auditor
+                <h2 id="diagnostics-modal-title" className="text-base sm:text-lg font-black text-white tracking-tight">
+                  System Health & SQL Query Auditor
                 </h2>
                 <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
                   Grade A+ (99.8%)
@@ -143,14 +163,16 @@ export const SystemHealthDiagnosticsModal: React.FC<SystemHealthDiagnosticsModal
             <button
               onClick={runDiagnostics}
               disabled={isRunningBenchmark}
-              className="p-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white transition-colors cursor-pointer disabled:opacity-50"
+              aria-label="Rerun SQL Query Benchmark"
+              className="p-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white transition-colors cursor-pointer disabled:opacity-50 focus-visible:ring-2 focus-visible:ring-sky-400 focus:outline-hidden"
               title="Rerun Diagnostics"
             >
               <RefreshCw className={`w-4 h-4 ${isRunningBenchmark ? 'animate-spin text-sky-400' : ''}`} />
             </button>
             <button
               onClick={onClose}
-              className="p-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-white transition-colors cursor-pointer"
+              aria-label="Close Diagnostics Modal"
+              className="p-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-white transition-colors cursor-pointer focus-visible:ring-2 focus-visible:ring-sky-400 focus:outline-hidden"
             >
               <X className="w-4 h-4" />
             </button>
@@ -158,7 +180,7 @@ export const SystemHealthDiagnosticsModal: React.FC<SystemHealthDiagnosticsModal
         </div>
 
         {/* Modal Body */}
-        <div className="p-5 sm:p-6 overflow-y-auto space-y-6 flex-1">
+        <div className="p-5 sm:p-6 overflow-y-auto space-y-6 flex-1 text-xs text-slate-300">
           {/* Key KPI Metrics Grid */}
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
             <div className="p-3.5 rounded-2xl bg-slate-800/60 border border-slate-700/60">
@@ -282,7 +304,7 @@ export const SystemHealthDiagnosticsModal: React.FC<SystemHealthDiagnosticsModal
         {/* Modal Footer */}
         <div className="p-4 sm:p-5 bg-slate-950 border-t border-slate-800 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs">
           <div className="flex items-center space-x-2 text-slate-400">
-            <ApolloLogo size="sm" variant="compact" theme="dark" />
+            <HealthcareLogo size="sm" variant="compact" theme="dark" />
             <span>• Verified Zero Bottlenecks & 100% Deterministic Execution</span>
           </div>
 
