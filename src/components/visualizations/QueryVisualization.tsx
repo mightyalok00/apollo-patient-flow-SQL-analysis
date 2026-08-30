@@ -10,7 +10,9 @@ import {
   FileImage,
   FileSpreadsheet,
   Check,
-  Maximize2
+  Maximize2,
+  Image as ImageIcon,
+  Activity
 } from 'lucide-react';
 import { QueryExecutionResult, SqlQueryQuestion } from '../../types';
 
@@ -83,7 +85,7 @@ const METRIC_DEFINITIONS: Record<number, MetricDefinition[]> = {
     { name: 'Patient Flow Sankey', unit: 'Admissions', formula: 'Volume flow across Hospital -> Dept -> Care', scope: 'System Network Topology', targetBenchmark: '2,500 Total Flow' },
   ],
   11: [
-    { name: 'Wait Deviation', unit: 'Minutes Delta', formula: 'Dept Avg Wait - Global Network Avg (62.81m)', scope: 'Benchmark Gap', targetBenchmark: '0.00m (Network Baseline)' },
+    { name: 'Wait Deviation', unit: 'Minutes Delta', formula: 'Dept Avg Wait - Global Network Avg (49.3m)', scope: 'Benchmark Gap', targetBenchmark: '0.00m (Network Baseline)' },
   ],
   12: [
     { name: 'Operational Quadrant', unit: 'Volume vs Wait', formula: 'Admissions (X) vs Wait Min (Y) vs Readmission (Z)', scope: 'Multi-variable Triage', targetBenchmark: 'Bottom-Right Optimal' },
@@ -109,10 +111,14 @@ export const QueryVisualization: React.FC<QueryVisualizationProps> = ({
   const chartContainerRef = useRef<HTMLDivElement>(null);
   const [copiedPNG, setCopiedPNG] = useState(false);
   const [showInfo, setShowInfo] = useState(false);
+  const [viewMode, setViewMode] = useState<'interactive' | 'static-vector'>('interactive');
 
   const metrics = METRIC_DEFINITIONS[questionNumber] || [
     { name: 'Query Metric', unit: 'Units', formula: 'Derived from SQL result set', scope: 'Filtered result data' }
   ];
+
+  const qFormatted = questionNumber < 10 ? `0${questionNumber}` : `${questionNumber}`;
+  const staticSvgPath = `/charts/q${qFormatted}.svg`;
 
   const handleExportPNG = async () => {
     if (!chartContainerRef.current) return;
@@ -120,7 +126,7 @@ export const QueryVisualization: React.FC<QueryVisualizationProps> = ({
       // Find SVG inside container
       const svgElement = chartContainerRef.current.querySelector('svg');
       if (!svgElement) {
-        alert('Could not locate chart SVG for image export.');
+        window.open(staticSvgPath, '_blank');
         return;
       }
 
@@ -177,6 +183,36 @@ export const QueryVisualization: React.FC<QueryVisualizationProps> = ({
   };
 
   const renderActiveChart = () => {
+    if (viewMode === 'static-vector') {
+      return (
+        <div className="flex flex-col items-center justify-center p-4">
+          <div className="w-full max-w-4xl bg-white rounded-xl shadow-xs border border-slate-200 overflow-hidden">
+            <img 
+              src={staticSvgPath} 
+              alt={`Question ${questionNumber} Analytical Chart`} 
+              className="w-full h-auto object-contain rounded-lg max-h-[550px]"
+              onError={(e) => {
+                // Fallback to interactive mode if static asset unavailable
+                setViewMode('interactive');
+              }}
+            />
+          </div>
+          <div className="mt-3 flex items-center space-x-3 text-xs text-slate-500">
+            <span>High-resolution standalone vector SVG</span>
+            <a 
+              href={staticSvgPath} 
+              target="_blank" 
+              rel="noreferrer"
+              className="text-sky-600 hover:underline font-bold flex items-center space-x-1"
+            >
+              <span>Open raw SVG</span>
+              <Maximize2 className="w-3 h-3" />
+            </a>
+          </div>
+        </div>
+      );
+    }
+
     if (!resultData || !resultData.rows || resultData.rows.length === 0) {
       return (
         <div className="flex flex-col items-center justify-center p-12 bg-slate-50 border border-dashed border-slate-300 rounded-2xl text-slate-500 text-center">
@@ -245,8 +281,33 @@ export const QueryVisualization: React.FC<QueryVisualizationProps> = ({
           </div>
         </div>
 
-        {/* Action Controls */}
-        <div className="flex items-center space-x-2 shrink-0">
+        {/* View Mode Toggle & Action Controls */}
+        <div className="flex flex-wrap items-center gap-2 shrink-0">
+          <div className="flex items-center bg-slate-100 p-0.5 rounded-xl border border-slate-200 text-xs">
+            <button
+              onClick={() => setViewMode('interactive')}
+              className={`px-2.5 py-1 rounded-lg font-bold transition-all flex items-center space-x-1 cursor-pointer ${
+                viewMode === 'interactive'
+                  ? 'bg-white text-sky-900 shadow-xs'
+                  : 'text-slate-600 hover:text-slate-900'
+              }`}
+            >
+              <Activity className="w-3.5 h-3.5 text-sky-600" />
+              <span>Interactive D3/Chart</span>
+            </button>
+            <button
+              onClick={() => setViewMode('static-vector')}
+              className={`px-2.5 py-1 rounded-lg font-bold transition-all flex items-center space-x-1 cursor-pointer ${
+                viewMode === 'static-vector'
+                  ? 'bg-white text-sky-900 shadow-xs'
+                  : 'text-slate-600 hover:text-slate-900'
+              }`}
+            >
+              <ImageIcon className="w-3.5 h-3.5 text-indigo-600" />
+              <span>Vector SVG</span>
+            </button>
+          </div>
+
           <button
             onClick={() => setShowInfo(!showInfo)}
             aria-label="Toggle metric information"
@@ -266,7 +327,7 @@ export const QueryVisualization: React.FC<QueryVisualizationProps> = ({
             className="px-3 py-1.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold flex items-center space-x-1.5 shadow-xs active:scale-95 transition-all cursor-pointer"
           >
             {copiedPNG ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <FileImage className="w-3.5 h-3.5 text-sky-400" />}
-            <span>{copiedPNG ? 'Saved PNG' : 'Export PNG'}</span>
+            <span>{copiedPNG ? 'Saved' : 'Export PNG'}</span>
           </button>
         </div>
       </div>

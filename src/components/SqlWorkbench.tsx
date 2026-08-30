@@ -378,6 +378,20 @@ export const SqlWorkbench: React.FC<SqlWorkbenchProps> = ({ initialQuestionNumbe
               {/* Tab navigation */}
               <div className="flex space-x-1.5 overflow-x-auto pb-1 sm:pb-0">
                 <button
+                  id="tab-visualization"
+                  onClick={() => setActiveTab('visualization')}
+                  aria-label="View Analytical Chart and Visualizations"
+                  aria-current={activeTab === 'visualization' ? 'page' : undefined}
+                  className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center space-x-1.5 cursor-pointer whitespace-nowrap focus-visible:ring-2 focus-visible:ring-sky-400 focus:outline-hidden ${
+                    activeTab === 'visualization'
+                      ? 'bg-sky-600 text-white shadow-xs'
+                      : 'text-slate-600 hover:bg-slate-100'
+                  }`}
+                >
+                  <BarChart3 className="w-3.5 h-3.5" />
+                  <span>Chart & Visualizer</span>
+                </button>
+                <button
                   id="tab-results"
                   onClick={() => setActiveTab('results')}
                   aria-label="View Query Results Table"
@@ -459,6 +473,18 @@ export const SqlWorkbench: React.FC<SqlWorkbenchProps> = ({ initialQuestionNumbe
                 </div>
               )}
             </div>
+
+            {/* Visualizer & Chart Tab */}
+            {activeTab === 'visualization' && (
+              <div className="p-4 sm:p-5">
+                <QueryVisualization
+                  queryId={activeQuestion.id}
+                  questionNumber={activeQuestion.questionNumber}
+                  question={activeQuestion}
+                  resultData={queryResult}
+                />
+              </div>
+            )}
 
             {/* Results Table View (with horizontal scroll support) */}
             {activeTab === 'results' && queryResult && (

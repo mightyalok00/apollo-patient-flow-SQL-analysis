@@ -8,9 +8,11 @@ import {
   Layers, 
   ShieldCheck, 
   FileCode,
-  ExternalLink
+  ExternalLink,
+  Code2
 } from 'lucide-react';
 import { DATABASE_TABLES } from '../data/hospitalData';
+import { ErDiagramVisualizer } from './ErDiagramVisualizer';
 
 export const DatabaseSchemaExplorer: React.FC = () => {
   const [selectedTable, setSelectedTable] = useState<string>('admissions');
@@ -36,103 +38,37 @@ export const DatabaseSchemaExplorer: React.FC = () => {
         <div className="flex flex-wrap gap-3">
           <button
             onClick={() => setIsDiagramExpanded(true)}
-            className="bg-indigo-600 hover:bg-indigo-500 text-white font-bold px-4 py-2 rounded-xl text-xs flex items-center space-x-1.5 transition-all shadow-sm"
+            className="bg-indigo-600 hover:bg-indigo-500 text-white font-bold px-4 py-2 rounded-xl text-xs flex items-center space-x-1.5 transition-all shadow-sm cursor-pointer"
           >
             <Maximize2 className="w-3.5 h-3.5" />
-            <span>View Full ER Diagram</span>
+            <span>Full-Screen ER Diagram</span>
           </button>
         </div>
       </div>
 
-      {/* ER Diagram Preview & Quick Stats */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-        <div className="lg:col-span-6 bg-white p-5 rounded-2xl border border-slate-200 shadow-xs flex flex-col justify-between">
+      {/* Interactive ER Diagram Canvas */}
+      <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs">
+        <div className="flex items-center justify-between mb-4">
           <div>
-            <div className="flex items-center justify-between mb-3">
-              <div>
-                <h3 className="font-bold text-base text-slate-900">Entity Relationship Diagram (ERD)</h3>
-                <p className="text-xs text-slate-500">Visual mapping of primary and foreign key constraints</p>
-              </div>
-              <button
-                onClick={() => setIsDiagramExpanded(true)}
-                className="text-xs text-indigo-600 font-semibold hover:underline flex items-center space-x-1"
-              >
-                <span>Expand</span>
-                <Maximize2 className="w-3 h-3" />
-              </button>
-            </div>
-
-            <div 
-              onClick={() => setIsDiagramExpanded(true)}
-              className="bg-slate-50 border border-slate-200 rounded-xl overflow-hidden cursor-pointer hover:opacity-95 transition-all relative group flex items-center justify-center p-2 min-h-[220px]"
-            >
-              <img 
-                src="/ER_Diagram.png" 
-                alt="Apollo Hospitals ER Diagram" 
-                className="max-h-56 object-contain rounded-lg"
-                referrerPolicy="no-referrer"
-              />
-              <div className="absolute inset-0 bg-slate-950/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center text-white text-xs font-semibold">
-                Click to expand high-resolution diagram
-              </div>
-            </div>
+            <h2 className="font-extrabold text-lg text-slate-900 flex items-center space-x-2">
+              <Database className="w-5 h-5 text-indigo-600" />
+              <span>Apollo Hospitals Interactive Entity Relationship Diagram (ERD)</span>
+            </h2>
+            <p className="text-xs text-slate-500 mt-0.5">
+              Click any table in the diagram to inspect columns, constraints, and data definitions below.
+            </p>
           </div>
-
-          <div className="pt-3 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500 mt-3">
-            <span>Cardinalities: 1:N & Composite FKs</span>
-            <span className="font-semibold text-slate-700">MySQL InnoDB Engine</span>
-          </div>
+          <button
+            onClick={() => setIsDiagramExpanded(true)}
+            className="hidden sm:flex text-xs text-indigo-600 font-bold hover:underline items-center space-x-1 cursor-pointer bg-indigo-50 px-3 py-1.5 rounded-lg border border-indigo-200"
+          >
+            <span>Full Screen</span>
+            <Maximize2 className="w-3.5 h-3.5" />
+          </button>
         </div>
 
-        {/* Database Summary Metrics */}
-        <div className="lg:col-span-6 space-y-4">
-          <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs">
-            <h3 className="font-bold text-base text-slate-900 mb-3">Database Architecture Highlights</h3>
-            <div className="space-y-3 text-xs text-slate-600">
-              <div className="flex items-start space-x-2.5 p-2.5 rounded-xl bg-slate-50 border border-slate-100">
-                <ShieldCheck className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
-                <div>
-                  <span className="font-bold text-slate-800">Referential Integrity: </span>
-                  Enforces strict foreign key constraints between admissions, patients, doctors, and departments.
-                </div>
-              </div>
-
-              <div className="flex items-start space-x-2.5 p-2.5 rounded-xl bg-slate-50 border border-slate-100">
-                <Key className="w-4 h-4 text-amber-600 shrink-0 mt-0.5" />
-                <div>
-                  <span className="font-bold text-slate-800">Composite Department Keys: </span>
-                  Departments & Bed observations maintain composite relationships on <code className="font-mono bg-slate-200 px-1 rounded">(department_id, hospital_id)</code>.
-                </div>
-              </div>
-
-              <div className="flex items-start space-x-2.5 p-2.5 rounded-xl bg-slate-50 border border-slate-100">
-                <FileCode className="w-4 h-4 text-sky-600 shrink-0 mt-0.5" />
-                <div>
-                  <span className="font-bold text-slate-800">Optimized Composite Indexing: </span>
-                  Includes composite indexes on high-frequency join attributes to eliminate table scan bottlenecks.
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Quick Table Counts Grid */}
-          <div className="grid grid-cols-3 gap-2 text-center">
-            {DATABASE_TABLES.map(t => (
-              <button
-                key={t.name}
-                onClick={() => setSelectedTable(t.name)}
-                className={`p-2.5 rounded-xl border transition-all ${
-                  selectedTable === t.name
-                    ? 'bg-indigo-50 border-indigo-300 text-indigo-900 font-bold shadow-xs'
-                    : 'bg-white border-slate-200 text-slate-700 hover:bg-slate-50'
-                }`}
-              >
-                <div className="text-xs truncate">{t.name}</div>
-                <div className="text-sm font-extrabold text-slate-900">{t.rowCount.toLocaleString()}</div>
-              </button>
-            ))}
-          </div>
-        </div>
+        {/* Embedded Interactive ER Diagram */}
+        <ErDiagramVisualizer onSelectTable={(name) => setSelectedTable(name)} />
       </div>
 
       {/* Interactive Table Schema Viewer */}
@@ -143,7 +79,7 @@ export const DatabaseSchemaExplorer: React.FC = () => {
             <button
               key={t.name}
               onClick={() => setSelectedTable(t.name)}
-              className={`px-3.5 py-2 rounded-xl text-xs font-bold transition-all whitespace-nowrap flex items-center space-x-1.5 ${
+              className={`px-3.5 py-2 rounded-xl text-xs font-bold transition-all whitespace-nowrap flex items-center space-x-1.5 cursor-pointer ${
                 selectedTable === t.name
                   ? 'bg-indigo-600 text-white shadow-xs'
                   : 'text-slate-600 hover:bg-slate-200'
@@ -241,33 +177,31 @@ export const DatabaseSchemaExplorer: React.FC = () => {
       {/* Expanded Diagram Modal */}
       {isDiagramExpanded && (
         <div 
-          className="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-xs flex items-center justify-center p-4"
+          className="fixed inset-0 z-50 bg-slate-950/85 backdrop-blur-xs flex items-center justify-center p-4"
           onClick={() => setIsDiagramExpanded(false)}
         >
           <div 
-            className="bg-white rounded-2xl max-w-5xl w-full max-h-[90vh] p-6 overflow-hidden flex flex-col shadow-2xl"
+            className="bg-slate-900 border border-slate-800 rounded-2xl max-w-6xl w-full max-h-[92vh] p-6 overflow-hidden flex flex-col shadow-2xl"
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="flex items-center justify-between pb-3 border-b border-slate-200 mb-4">
+            <div className="flex items-center justify-between pb-3 border-b border-slate-800 mb-4">
               <div>
-                <h3 className="font-extrabold text-lg text-slate-900">Apollo Hospitals Entity-Relationship Diagram</h3>
-                <p className="text-xs text-slate-500">Full visual schema with table relationships</p>
+                <h3 className="font-extrabold text-lg text-white">Apollo Hospitals Entity-Relationship Diagram</h3>
+                <p className="text-xs text-slate-400">Full visual relational schema with foreign key cardinalities</p>
               </div>
               <button
                 onClick={() => setIsDiagramExpanded(false)}
-                className="px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold"
+                className="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-bold cursor-pointer"
               >
                 Close (ESC)
               </button>
             </div>
 
-            <div className="flex-1 overflow-auto flex items-center justify-center p-4 bg-slate-50 rounded-xl">
-              <img 
-                src="/ER_Diagram.png" 
-                alt="Apollo Hospitals ER Diagram" 
-                className="max-w-full max-h-full object-contain rounded-lg shadow-sm"
-                referrerPolicy="no-referrer"
-              />
+            <div className="flex-1 overflow-auto">
+              <ErDiagramVisualizer isModal={true} onSelectTable={(name) => {
+                setSelectedTable(name);
+                setIsDiagramExpanded(false);
+              }} />
             </div>
           </div>
         </div>
