@@ -1,5 +1,13 @@
 # Apollo Hospitals Patient Flow SQL Analysis
 
+## ⭐ Project highlights
+
+- 15 business-focused SQL analyses covering patient flow, waiting time, readmissions, workload, and bed utilization.
+- Demonstrates joins, CTEs, window functions, views, indexing, `EXPLAIN`, and query optimization.
+- Includes an ER diagram and reproducible MySQL scripts using a clearly identified synthetic dataset.
+
+**⭐ If this SQL project helps you learn or build something, consider starring the repository.**
+
 ## Project Overview
 
 This project analyzes hospital patient flow using MySQL. It evaluates admissions, waiting times, length of stay, readmissions, department performance, bed utilization and operational bottlenecks across four synthetic Apollo hospital locations.
