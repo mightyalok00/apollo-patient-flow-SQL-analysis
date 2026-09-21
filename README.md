@@ -198,6 +198,10 @@ During testing, the unoptimized query took approximately 0.032 seconds and the o
 
 The analysis shows that Emergency departments are the clearest patient-flow concern. Apollo Delhi Emergency has the highest combined bottleneck score, while Apollo Bangalore Emergency has the longest average wait. Bed utilization is not Critical at the aggregate level, so the strongest improvement opportunities relate to Emergency workflow, discharge processes, readmission reduction and demand-based staffing. The project demonstrates an end-to-end SQL workflow covering schema exploration, analytical querying, window functions, CTEs, indexing and query optimization.
 
+## GitHub Language Classification
+
+This is a **MySQL/SQL analytics project**. GitHub may classify a repository by generated or supporting files rather than the project's primary technology. The repository includes a `.gitattributes` configuration so generated/supporting assets do not distort the language summary.
+
 ## Project Files
 
 ```text
